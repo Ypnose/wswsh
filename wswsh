@@ -17,15 +17,25 @@ function parse_css {
 	fi
 }
 
+function verify_dir {
+	if [[ -n $DEST && ! -d $DEST ]]; then
+		print "Folder is missing" >&2
+		exit 1
+	elif [[ -n $DEST && -d $DEST ]]; then
+		print "Using custom dir"
+	fi
+}
+
 function page_content {
 	PAGES="$(find -type f -iname "*.${EXT:-txt}")"
+	verify_dir
 	print "Generating pages..."
 	#[[ ! -x $INT ]] && print "No intrepreter found" >&2 && exit 1
 	for f in $PAGES; do
 		#${INT:-wswshp} $f >> crappytest.html
-		page_head > crappytest.html
-		cat $f >> crappytest.html
-		page_foot >> crappytest.html
+		page_head > ${DEST:-.}/${f%.*}.html
+		cat $f >> ${DEST:-.}/${f%.*}.html
+		page_foot >> ${DEST:-.}/${f%.*}.html
 	done
 }
 
