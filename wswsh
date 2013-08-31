@@ -1,0 +1,27 @@
+#!/usr/bin/mksh
+#   Script by Ypnose  <linuxien[AT]legtux[DOT]org>
+
+function parse_config {
+	if [[ ! -f wswsh.conf ]]; then
+		print "Missing configs" &>2
+		exit 1
+	then
+		. wswsh.conf
+	fi
+}
+
+function page_content {
+	PAGES="$(find -type f -iname "*.${EXT:-txt}")"
+	print "Generating pages..."
+	[[ ! -x $INT ]] && print "No intrepreter found" &>2 && exit 1
+	for f in PAGES; do
+		${INT:-wswshp} $f
+	done
+}
+
+function page_entity {
+	[[ -n $WTIT ]]
+	[[ -n $WSLOG ]]
+}
+
+exit
