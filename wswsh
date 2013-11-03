@@ -1,44 +1,158 @@
 #!/usr/bin/mksh
-#   Script by Ypnose  <linuxien[AT]legtux[DOT]org>
+# 2013 - wswsh - Ypnose <linuxien[AT]legtux[DOT]org
+# wswsh
+
+# This project is under BSD (3-Clause) License
+# Copyright (c) 2013, Ypnose
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without modification,
+# are permitted provided that the following conditions are met:
+#
+# * Redistributions of source code must retain the above copyright notice, this
+#   list of conditions and the following disclaimer.
+#
+# * Redistributions in binary form must reproduce the above copyright notice, this
+#   list of conditions and the following disclaimer in the documentation and/or
+#   other materials provided with the distribution.
+#
+# * Neither the name of the {organization} nor the names of its
+#   contributors may be used to endorse or promote products derived from
+#   this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+# ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+# WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+# ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+# (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+# LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+# ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+# SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #set -x
+RAC="$1"
+
+function usage {
+	print "usage: wswsh [website_root]"
+}
+
 function parse_config {
-	if [[ ! -f wswsh.conf ]]; then
-		print "Missing configs" >&2
-		exit 1
+	if [[ -r ${RAC}/wswsh.conf ]]; then
+		. "${RAC}/wswsh.conf"
 	else
-		source wswsh.conf
-	fi
-}
-
-function parse_css {
-	if [[ -z $CSSF ]]; then
-		print ""
-	fi
-}
-
-function verify_dir {
-	if [[ -n $DEST && ! -d $DEST ]]; then
-		print "Folder is missing" >&2
+		print -u2 "Missing configs"
 		exit 1
-	elif [[ -n $DEST && -d $DEST ]]; then
-		print "Using custom dir"
 	fi
 }
 
-function page_content {
-	PAGES="$(find -type f -iname "*.${EXT:-txt}")"
-	verify_dir
-	print "Generating pages..."
-	#[[ ! -x $INT ]] && print "No intrepreter found" >&2 && exit 1
-	for f in $PAGES; do
-		#${INT:-wswshp} $f >> crappytest.html
-		page_head > ${DEST:-.}/${f%.*}.html
-		cat $f >> ${DEST:-.}/${f%.*}.html
-		page_foot >> ${DEST:-.}/${f%.*}.html
-	done
+function verify_dirs {
+	if [[ -n $SRC && -d ${RAC}/${SRC} ]]; then
+		print "Using custom sources from $SRC"
+		WSRC="../${SRC}"
+	elif [[ -z $SRC && -d ${RAC}/src ]]; then
+		print "Using sources from default directory src"
+	else
+		print -u2 "src doesn't exist"
+		exit 1
+	fi
+
+	if [[ -n $DEST ]]; then
+		if [[ -d ${RAC}/${DEST} ]]; then
+			print "Using custom directory $DEST"
+		else
+			print "Creating directory $DEST"
+			mkdir "$DEST"
+		fi
+	else
+		print "Using default directory dest"
+		[[ ! -d ${RAC}/dest ]] && mkdir "${RAC}/dest"
+	fi
 }
 
+function get_structure {
+	# Add a fuckin' message?
+	verify_dirs
+	if [[ -n $(find "${RAC}/${SRC:-src}" -type d -print) ]]; then
+		# The following line works with GNU find:
+		# find "${RAC}/${SRC:-src}" -type d -printf "${DEST}/%P\0" | xargs -0 mkdir -p
+		# I finally decided to write lines "compatible" with {Mir,Open}BSD. Here we go:
+		cd "${RAC}/${DEST:-dest}"
+		( cd "${WSRC:-../src}"; find . -type d -print0 ) | xargs -0 mkdir -p
+		cd ..
+	else
+		print "No folders found. Nothing to create"
+	fi
+}
+
+# Rework this dark crap!!
+#function ignore_f {
+	#if [[ -n $IGNORE ]]; then
+		#for i in $IGNORE; do
+			#ARGS+="! -name ${i} "
+		#done
+	#fi
+	#print "$ARGS"
+#}
+
+function page_int {
+	if [[ -n $INTERP && ! -x ${RAC}/interp/${INTERP} ]]; then
+		print -u2 "No intrepreter found"
+		exit 1
+	fi
+	case $INTERP in
+		smu) print "Converting from markdown using smu" ;;
+	esac
+}
+
+function parse_css_f {
+	if [[ -n $CSSF && -r ${RAC}/${SRC:-src}/${CSSF} ]]; then
+		CSSV=1
+		print "Using custom CSS style"
+		cp "${RAC}/${SRC:-src}/${CSSF}" "${RAC}/${DEST:-dest}/${CSSF}"
+	fi
+}
+
+# Generate the page
+function gen_page_skel {
+	parse_css_f
+	PAGES="$(find "${RAC}/${SRC:-src}" -type f -iname "*.${EXT:-txt}")"
+	print "Generating pages..."
+	for f in $(find "${SRC:-src}" -type f -iname "*.${EXT:-txt}"); do
+		FILENOSRC=${f#*/}
+		FILENOMAD=${FILENOSRC%%.*}
+		#FILENAME=${FILENOSRC##*/}
+		#FILENOEXT=${FILENAME%.*}
+		#print $PWD
+		#print $f
+		#print $FILENOSRC
+		#print $FILENOMAD
+		#print $FILENAME
+		#print $FILENOEXT
+		page_head >> "${DEST:-dest}/${FILENOMAD}.html"
+		"${INTERP:-cat}" $f >> "${DEST:-dest}/${FILENOMAD}.html"
+		page_foot >> "${DEST:-dest}/${FILENOMAD}.html"
+		# Verify it!
+		RET=$?
+		if (( RET != 0 )); then
+			print -u2 "Generating $f failed"
+			exit 1
+		fi
+	done
+	# We copy existing *.html files from src to dest
+	for x in $(find "${SRC:-src}" -type f -iname "*.html"); do
+		if [[ -r ${DEST:-dest}/${x#*/} ]]; then
+			print "${DEST:-dest}/${x#*/} already exists"
+			continue
+		fi
+		cp $x "${DEST:-dest}/${x#*/}"
+	done
+	TOT=$(find "${RAC}/${DEST:-dest}" -type f | wc -l)
+	print "Generated $TOT files."
+}
+
+# Page content
 function page_head {
 	print '<!DOCTYPE html>
 <html lang="fr">
@@ -47,17 +161,36 @@ function page_head {
 	<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
 	<meta charset="utf-8" />
-</head>
-<body>'
+	<meta name="author" content="Ypnose" />'
+	(( CSSV == 1 )) && print "	<link rel=\"stylesheet\" type=\"text/css\" href=\"/${CSSF}\" />"
+	[[ -n $WTIT ]] && print "	<title>${WTIT}</title>"
+	print '</head>
+<body>
+	<nav>
+		<ul>
+			<li>TITLE1</li>
+			<li>TITLE2</li>
+			<li>TITLE3</li>
+		</ul>
+	</nav>'
 }
 
 function page_foot {
-	print '	<!-- Proudly generated by wswsh - '"$(LC_ALL=C date)"' -->
+	print '	<footer></footer>
+	<!-- Generated by wswsh - '"$(LC_ALL=C date)"' -->
 </body>
 </html>'
 }
 
-parse_config
-page_content
+if [[ -z $1 ]]; then
+	usage
+	exit 1
+#else
+	#print $1
+fi
 
-exit
+parse_config
+get_structure
+gen_page_skel
+
+exit 0

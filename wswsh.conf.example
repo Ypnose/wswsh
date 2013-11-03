@@ -1,0 +1,36 @@
+# 2013 - wswsh - Ypnose <linuxien[AT]legtux[DOT]org
+# wswsh.conf.example
+
+# One config per website. Put it in the root folder.
+
+# Site title and slogan.
+#WTIT=""
+#WSLOG=""
+
+# Put the other interpreter (smu for example).
+# You can leave and comment this option if you only concatenate files.
+#INTERP=""
+
+# Default extension is txt, when EXT isn't specified.
+# If you want to write articles with HTML fragments,
+# EXT should be wshtml.
+# If you want to write articles in markdown,
+# EXT should be md or markdown.
+# Don't write html or .txt (we don't need the dot).
+# For example, if you choose txt, it'll "use" files with the
+# following extensions: txt,TXT,txT,TxT,tXt and so on.
+#EXT=""
+
+# Source files and destination files.
+# Better to avoid spaces in directories names.
+# If SRC isn't defined, src/ is the source folder.
+# If DEST isn't defined, dest/ is the destination folder.
+#SRC=""
+#DEST=""
+
+# CSS style. Pretty obvious, right?
+# Write entire location from the src folder.
+#CSSF=""
+
+# Separate filename with spaces.
+#IGNORE=""
