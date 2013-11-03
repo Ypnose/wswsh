@@ -102,7 +102,7 @@ function page_int {
 		exit 1
 	fi
 	case $INTERP in
-		smu) print "Converting from markdown using smu" ;;
+		smu) print "Converting from markdown using smu"; CINTERP="./interp/smu";;
 	esac
 }
 
@@ -117,21 +117,15 @@ function parse_css_f {
 # Generate the page
 function gen_page_skel {
 	parse_css_f
+	page_int
 	PAGES="$(find "${RAC}/${SRC:-src}" -type f -iname "*.${EXT:-txt}")"
 	print "Generating pages..."
+	cd "$RAC"
 	for f in $(find "${SRC:-src}" -type f -iname "*.${EXT:-txt}"); do
 		FILENOSRC=${f#*/}
 		FILENOMAD=${FILENOSRC%%.*}
-		#FILENAME=${FILENOSRC##*/}
-		#FILENOEXT=${FILENAME%.*}
-		#print $PWD
-		#print $f
-		#print $FILENOSRC
-		#print $FILENOMAD
-		#print $FILENAME
-		#print $FILENOEXT
 		page_head >> "${DEST:-dest}/${FILENOMAD}.html"
-		"${INTERP:-cat}" $f >> "${DEST:-dest}/${FILENOMAD}.html"
+		"${CINTERP:-cat}" $f >> "${DEST:-dest}/${FILENOMAD}.html"
 		page_foot >> "${DEST:-dest}/${FILENOMAD}.html"
 		# Verify it!
 		RET=$?
@@ -148,6 +142,7 @@ function gen_page_skel {
 		fi
 		cp $x "${DEST:-dest}/${x#*/}"
 	done
+	cd ..
 	TOT=$(find "${RAC}/${DEST:-dest}" -type f | wc -l)
 	print "Generated $TOT files."
 }

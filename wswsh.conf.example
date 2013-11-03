@@ -6,7 +6,8 @@
 # Site title.
 #WTIT=""
 
-# Write the other interpreter (smu for example).
+# Write the other interpreter (smu for example, tested with 2c7b9d2ec0 rev).
+# https://github.com/Gottox/smu
 # You must place the executable in a directory called "interp", in the root folder.
 # You can leave this option if you only concatenate files.
 #INTERP=""
