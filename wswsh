@@ -114,6 +114,9 @@ function parse_css_f {
 	fi
 }
 
+function parse_title {
+}
+
 # Generate the page
 function gen_page_skel {
 	parse_css_f
@@ -124,10 +127,11 @@ function gen_page_skel {
 	for f in $(find "${SRC:-src}" -type f -iname "*.${EXT:-txt}"); do
 		FILENOSRC=${f#*/}
 		FILENOMAD=${FILENOSRC%%.*}
+		# We got the title from <h1>
+		ATIT="$(awk '/<h1>/{gsub(/\t/,"");gsub(/[</]|h1>/,"");print " | "$0;exit}' $f)"
 		page_head >> "${DEST:-dest}/${FILENOMAD}.html"
 		"${CINTERP:-cat}" $f >> "${DEST:-dest}/${FILENOMAD}.html"
 		page_foot >> "${DEST:-dest}/${FILENOMAD}.html"
-		# Verify it!
 		RET=$?
 		if (( RET != 0 )); then
 			print -u2 "Generating $f failed"
@@ -158,7 +162,7 @@ function page_head {
 	<meta charset="utf-8" />
 	<meta name="author" content="Ypnose" />'
 	(( CSSV == 1 )) && print "	<link rel=\"stylesheet\" type=\"text/css\" href=\"/${CSSF}\" />"
-	[[ -n $WTIT ]] && print "	<title>${WTIT}</title>"
+	[[ -n $WTIT ]] && print "	<title>${WTIT}${ATIT}</title>"
 	print '</head>
 <body>
 	<nav>
