@@ -114,9 +114,6 @@ function parse_css_f {
 	fi
 }
 
-function parse_title {
-}
-
 # Generate the page
 function gen_page_skel {
 	parse_css_f
@@ -145,6 +142,13 @@ function gen_page_skel {
 			continue
 		fi
 		cp $x "${DEST:-dest}/${x#*/}"
+	done
+	for y in $FIL; do
+		if [[ ! -r ${SRC:-src}/${y} ]]; then
+		print "$y is missing"
+		continue
+		fi
+		cp "${SRC:-src}/${y}" "${DEST:-dest}/${y}"
 	done
 	cd ..
 	TOT=$(find "${RAC}/${DEST:-dest}" -type f | wc -l)

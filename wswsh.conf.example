@@ -33,6 +33,10 @@
 # Write entire location from the src folder.
 #CSSF=""
 
+# Files not handled by the generation.
+# Useful for RSS or robots.txt files
+#FIL=""
+
 # UNUSED (FOR NOW)!
 # Separate filename with spaces.
 #IGNORE=""
