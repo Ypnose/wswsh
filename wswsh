@@ -187,8 +187,6 @@ function page_foot {
 if [[ -z $1 ]]; then
 	usage
 	exit 1
-#else
-	#print $1
 fi
 
 parse_config
