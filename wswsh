@@ -125,7 +125,7 @@ function gen_page_skel {
 		FILENOSRC=${f#*/}
 		FILENOMAD=${FILENOSRC%%.*}
 		# We got the title from <h1>
-		ATIT="$(awk '/<h1>/{gsub(/\t/,"");gsub(/[</]|h1>/,"");print " | "$0;exit}' $f)"
+		ATIT="$(awk '/<h1>/{gsub(/\t/,"");gsub(/[</]|h1>/,"");gsub(/>|</,"");print " | "$0;exit}' $f)"
 		page_head >> "${DEST:-dest}/${FILENOMAD}.html"
 		"${CINTERP:-cat}" $f >> "${DEST:-dest}/${FILENOMAD}.html"
 		page_foot >> "${DEST:-dest}/${FILENOMAD}.html"
@@ -143,10 +143,11 @@ function gen_page_skel {
 		fi
 		cp $x "${DEST:-dest}/${x#*/}"
 	done
+	# The code is easy to understand, right?
 	for y in $FIL; do
 		if [[ ! -r ${SRC:-src}/${y} ]]; then
-		print "$y is missing"
-		continue
+			print "$y is missing"
+			continue
 		fi
 		cp "${SRC:-src}/${y}" "${DEST:-dest}/${y}"
 	done
@@ -160,15 +161,13 @@ function page_head {
 	print '<!DOCTYPE html>
 <html lang="fr">
 <head>
-	<!--[if lt IE 9]>
-	<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
-	<![endif]-->
 	<meta charset="utf-8" />
-	<meta name="author" content="Ypnose" />'
+	<meta name="author" content="John Foo" />'
 	(( CSSV == 1 )) && print "	<link rel=\"stylesheet\" type=\"text/css\" href=\"/${CSSF}\" />"
 	[[ -n $WTIT ]] && print "	<title>${WTIT}${ATIT}</title>"
 	print '</head>
 <body>
+	<header></header>
 	<nav>
 		<ul>
 			<li>TITLE1</li>
