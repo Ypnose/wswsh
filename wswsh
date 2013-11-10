@@ -101,6 +101,7 @@ function page_int {
 		print -u2 "No intrepreter found"
 		exit 1
 	fi
+	# More to come perhaps, with some others interpreters
 	case $INTERP in
 		smu) print "Converting from markdown using smu"; CINTERP="./interp/smu";;
 	esac

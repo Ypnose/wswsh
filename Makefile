@@ -2,27 +2,24 @@
 # Makefile for wswsh - see LICENSE for copyright and license
 # If you modified $DEST in wswsh.conf, you should probably hack this Makefile.
 
-SOFT = wswsh
-PREFIX = ${HOME}/Repos/Wswsh
-DEST = ${PREFIX}/dest
+SOFT     = wswsh
+PREFIX   = ${HOME}/Repos/Wswsh
+DEST     = ${PREFIX}/dest
+
+all: gen
 
 options:
-	@echo ${SOFT} options:
-	@echo "PREFIX = ${PREFIX}"
-	@echo "DEST = ${DEST}"
+	@echo ${SOFT} build options:
+	@echo "PREFIX  = ${PREFIX}"
+	@echo "DEST    = ${DEST}"
 
-config: wswsh.conf.example
-	@echo creating config
-	@cp wswsh.conf.example wswsh.conf
-	@echo you may take a look at wswsh.conf
+wswsh.conf:
+	@echo creating config from wswsh.conf.example
+	@cp wswsh.conf.example $@
+	@echo you may take a look at $@
 
 clean: ${DEST}
 	@echo removing dest
-	@rm -r ${DEST}
-
-purge: wswsh.conf ${DEST}
-	@echo purging the config and dest
-	@rm wswsh.conf
 	@rm -r ${DEST}
 
 gen:
@@ -32,8 +29,9 @@ regen: clean gen
 
 generate: gen
 
-server:
-	@echo starting the server
-	tinyserv
+purge: wswsh.conf ${DEST}
+	@echo purging the config and dest
+	@rm wswsh.conf
+	@rm -r ${DEST}
 
-.PHONY: options config clean purge gen regen generate server
+.PHONY: all options clean gen regen generate purge
