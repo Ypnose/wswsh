@@ -140,12 +140,13 @@ function gen_page_skel {
 
 	# RSS / Atom
 	# XML date, emulates $(date --rfc-3339=seconds) from GNU date
-	RDAT=$(date "+%Y-%m-%dT%H:%M:%SZ")
+	RDAT=$(LC_ALL=C date "+%Y-%m-%dT%H:%M:%SZ")
 	RSSF="${DEST:-dest}/atom.xml"
 	gen_site_xml > "$RSSF"
 	for z in $(find "${SRC:-src}/blog/" -mindepth 2 -type f -iname "*.${EXT:-txt}"); do # Modify location!
 		# Don't need to enable a specific hour, let's assume I wrote the pages at midnight.
 		RDADAT="$(awk '/<!--/{gsub(/\t/,"");gsub(/<!-- | -->/,"");print $0"T00:00:00Z";exit}' $z)"
+		RSSDES="$(awk '/<!-- DESC: /{gsub(/\t/,"");gsub(/<!-- DESC: | -->/,"");print $0;exit}' $z)"
 		RSSTIT="$(awk '/<h1>/{gsub(/\t/,"");gsub(/[</]|h1>/,"");gsub(/>|</,"");print $0;exit}' $z)"
 		RSSTNOSRC="${z#*/}"
 		RSSTNOEXT="${RSSTNOSRC%%.*}"
@@ -178,7 +179,7 @@ function gen_page_skel {
 # Page content
 function page_head {
 	print '<!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
 	<meta charset="utf-8" />
 	<meta name="author" content="John Foo" />'
@@ -224,7 +225,7 @@ function xml_content {
 		<link href="http://foowebsite.baz/'${RSSTNOEXT}'.html"/>
 		<id>http://foowebsite.baz/'"${RSSTNOEXT}"'.html</id>
 		<updated>'"${RDADAT}"'</updated>
-		<summary>Nop, nop, nop. OH YES!!</summary>
+		<summary>'"${RSSDES}"'</summary>
 	 </entry>
 '
 }
