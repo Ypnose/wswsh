@@ -140,19 +140,21 @@ function gen_page_skel {
 
 	# RSS / Atom
 	# XML date, emulates $(date --rfc-3339=seconds) from GNU date
-	RDAT=$(LC_ALL=C date "+%Y-%m-%dT%H:%M:%SZ")
-	RSSF="${DEST:-dest}/atom.xml"
-	gen_site_xml > "$RSSF"
-	for z in $(find "${SRC:-src}/blog/" -mindepth 2 -type f -iname "*.${EXT:-txt}"); do # Modify location!
-		# Don't need to enable a specific hour, let's assume I wrote the pages at midnight.
-		RDADAT="$(awk '/<!--/{gsub(/\t/,"");gsub(/<!-- | -->/,"");print $0"T00:00:00Z";exit}' $z)"
-		RSSDES="$(awk '/<!-- DESC: /{gsub(/\t/,"");gsub(/<!-- DESC: | -->/,"");print $0;exit}' $z)"
-		RSSTIT="$(awk '/<h1>/{gsub(/\t/,"");gsub(/[</]|h1>/,"");gsub(/>|</,"");print $0;exit}' $z)"
-		RSSTNOSRC="${z#*/}"
-		RSSTNOEXT="${RSSTNOSRC%%.*}"
-		xml_content >> "$RSSF"
-	done
-	print '</feed>' >> "$RSSF"
+	if [[ -n $FEED && $FEED = @([Yy]es|YES) ]]; then
+		RDAT=$(LC_ALL=C date "+%Y-%m-%dT%H:%M:%SZ")
+		RSSF="${DEST:-dest}/${RSSDIR}atom.xml"
+		gen_site_xml > "$RSSF"
+		for z in $(find "${SRC:-src}/blog/" -mindepth 2 -type f -iname "*.${EXT:-txt}"); do # Modify location!
+			# Don't need to enable a specific hour, let's assume I wrote the pages at midnight.
+			RDADAT="$(awk '/<!--/{gsub(/\t/,"");gsub(/<!-- | -->/,"");print $0"T00:00:00Z";exit}' $z)"
+			RSSDES="$(awk '/<!-- DESC: /{gsub(/\t/,"");gsub(/<!-- DESC: | -->/,"");print $0;exit}' $z)"
+			RSSTIT="$(awk '/<h1>/{gsub(/\t/,"");gsub(/[</]|h1>/,"");gsub(/>|</,"");print $0;exit}' $z)"
+			RSSTNOSRC="${z#*/}"
+			RSSTNOEXT="${RSSTNOSRC%%.*}"
+			xml_content >> "$RSSF"
+		done
+		print '</feed>' >> "$RSSF"
+	fi
 
 	# We copy existing *.html files from src to dest
 	for x in $(find "${SRC:-src}" -type f -iname "*.html"); do
@@ -209,21 +211,21 @@ function gen_site_xml {
 <feed xmlns="http://www.w3.org/2005/Atom">
 
 	<title>I am foo!</title>
-	<link href="http://foowebsite.baz/"/>
-	<link type="application/atom+xml" rel="self" href="http://foowebsite.baz/atom.xml"/>
+	<link href="http://'${WURL}'/"/>
+	<link type="application/atom+xml" rel="self" href="http://'${WURL}'/'${RSSDIR}'atom.xml"/>
 	<updated>'"${RDAT}"'</updated>
 	<author>
-		<name>Myname</name>
+		<name>My_awesome_name</name>
 	</author>
-	<id>http://foowebsite.baz/</id>
+	<id>http://'"${WURL}"'/</id>
 '
 }
 
 function xml_content {
 	print '	<entry>
 		<title>'"${RSSTIT}"'</title>
-		<link href="http://foowebsite.baz/'${RSSTNOEXT}'.html"/>
-		<id>http://foowebsite.baz/'"${RSSTNOEXT}"'.html</id>
+		<link href="http://'${WURL}'/'${RSSTNOEXT}'.html"/>
+		<id>http://'"${WURL}"'/'"${RSSTNOEXT}"'.html</id>
 		<updated>'"${RDADAT}"'</updated>
 		<summary>'"${RSSDES}"'</summary>
 	 </entry>

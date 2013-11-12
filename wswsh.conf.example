@@ -6,6 +6,10 @@
 # Site title.
 #WTIT=""
 
+# Site URL (without http://).
+# Used inside the feed.
+#WURL=""
+
 # Write the other interpreter (smu for example, tested with 2c7b9d2ec0 rev).
 # https://github.com/Gottox/smu
 # You must place the executable in a directory called "interp", in the root folder.
@@ -14,7 +18,7 @@
 
 # Default extension is txt, when EXT isn't specified.
 # If you want to write articles with HTML fragments,
-# EXT should be wshtml.
+# EXT should be wshtml or wtfhtml.
 # If you want to write articles in markdown,
 # EXT should be md or markdown.
 # DON'T WRITE html or .txt (we don't need the dot).
@@ -33,8 +37,17 @@
 # Write entire location from the src folder.
 #CSSF=""
 
+# Enable RSS/Atom feed.
+# Valid values: Yes, yes, YES. Disable it by commenting out the line, or write No.
+#FEED=""
+
+# Where to put the generated feed?
+# Write entire location from the src folder.
+# DON'T FORGET the trailing slash!
+#RSSDIR=""
+
 # Files not handled by the generation.
-# Useful for RSS or robots.txt files
+# Useful for robots.txt files for example.
 #FIL=""
 
 # UNUSED (FOR NOW)!
