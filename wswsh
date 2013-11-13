@@ -139,8 +139,8 @@ function gen_page_skel {
 	done
 
 	# RSS / Atom
-	# XML date, emulates $(date --rfc-3339=seconds) from GNU date
 	if [[ -n $FEED && $FEED = @([Yy]es|YES) ]]; then
+		# XML date, emulates $(date --rfc-3339=seconds) from GNU date
 		RDAT=$(LC_ALL=C date "+%Y-%m-%dT%H:%M:%SZ")
 		RSSF="${DEST:-dest}/${RSSDIR}atom.xml"
 		gen_site_xml > "$RSSF"
@@ -166,13 +166,15 @@ function gen_page_skel {
 	done
 
 	# The code is easy to understand, right?
-	for y in $FIL; do
-		if [[ ! -r ${SRC:-src}/${y} ]]; then
-			print "$y is missing"
-			continue
-		fi
-		cp "${SRC:-src}/${y}" "${DEST:-dest}/${y}"
-	done
+	if [[ -n $FIL ]]; then
+		for y in $FIL; do
+			if [[ ! -r ${SRC:-src}/${y} ]]; then
+				print "$y is missing"
+				continue
+			fi
+			cp "${SRC:-src}/${y}" "${DEST:-dest}/${y}"
+		done
+	fi
 	cd ..
 	TOT=$(find "${RAC}/${DEST:-dest}" -type f | wc -l)
 	print "Generated $TOT files."
