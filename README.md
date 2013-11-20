@@ -1,8 +1,16 @@
 wswsh - [w]eb [s]ucks [w]ithout [sh]ell
 -------------------------------------
 
-wswsh is a static website framework using shell. It means [w]eb [s]ucks [w]ithout [sh]ell. Simple name for a simple script.  
-*You can read another howto with examples [here](http://blog.ypnose.org) (might be useful)*
+wswsh is a static website framework using shell. It means [w]eb [s]ucks [w]ithout [sh]ell. Simple name for a simple script.
+It has many advantages:
+  * Lightweight
+  * Only requires a shell + UNIX utilities
+  * Markdown / smu support
+  * Human readable configuration
+  * 200 LOC
+  * Atom 1.0 Feed support
+
+*You can read another howto with examples [here](http://blog.ypnose.org) (might be useful).*
 
 How to use it
 ------------
@@ -71,6 +79,11 @@ Using the previous example, we now have:
 	└── wswsh.conf
 
 `dest` is your generated website. You can upload it.
+
+Copyright
+--------
+
+Code created by Ypnose, under BSD (3-Clause) License. You could send me fresh beers.
 
 Powering http://blog.ypnose.org  
 If you use wswsh for your website, please contact me. I'll add your website in the README.
