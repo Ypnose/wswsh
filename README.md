@@ -2,7 +2,7 @@ wswsh - [w]eb [s]ucks [w]ithout [sh]ell
 -------------------------------------
 
 wswsh is a static website framework using shell. It means [w]eb [s]ucks [w]ithout [sh]ell. Simple name for a simple script.  
-*You can read another [howto](http://blog.ypnose.org) with examples*
+*You can read another howto with examples [here](http://blog.ypnose.org) (might be useful)*
 
 How to use it
 ------------
@@ -39,6 +39,38 @@ A typical hierarchy contains a `src` directory, with your website inside it.
 	└── wswsh.conf
 
 Each folder in `src` will be reproduced in a new directory called `dest` (assuming you didn't change the `DEST`).
+*wswsh* supports [smu](https://github.com/Gottox/smu) with revision `2c7b9d2ec0`. If you write your posts in markdown, you should use `.md`, `.markdown` or `.txt` extensions.
+By default, there is no interpreter, only `cat` is used.
+
+When you're ready, launch `make gen` (or `make regen` if you did it already). `make regen` deletes an existing `dest` folder.  
+Using the previous example, we now have:
+
+	.
+	├── Makefile
+	├── dest
+	│   ├── css
+	│   │   └── style.css
+	│   ├── blog
+	│   │   └── my_post.html
+	│   ├── me
+	│   │   └── john_doe.html
+	│   └── foo
+	│       └── baz
+	│           └── this_is_a_test.html
+	├── src
+	│   ├── css
+	│   │   └── style.css
+	│   ├── blog
+	│   │   └── my_post.wshtml
+	│   ├── me
+	│   │   └── john_doe.wshtml
+	│   └── foo
+	│       └── baz
+	│           └── this_is_a_test.wshtml
+	├── wswsh
+	└── wswsh.conf
+
+`dest` is your generated website. You can upload it.
 
 Powering http://blog.ypnose.org  
 If you use wswsh for your website, please contact me. I'll add your website in the README.
