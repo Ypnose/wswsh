@@ -1,7 +1,7 @@
 wswsh
 =====
 
-[w]eb [s]ucks [w]ithout [sh]ell - Static website generator using shell
+[w]eb [s]ucks [w]ithout [sh]ell - Static website framework using shell
 
 * You can read another [howto](blog.ypnose.org) with examples
 
