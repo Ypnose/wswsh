@@ -50,6 +50,10 @@
 # Useful for robots.txt files for example.
 #FIL=""
 
+# Enable src backup.
+# Write entire location. The directory must exist.
+#BACKUP=""
+
 # UNUSED (FOR NOW)!
 # Separate filename with spaces.
 #IGNORE=""
