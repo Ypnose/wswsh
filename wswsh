@@ -58,7 +58,7 @@ function get_structure {
 		( cd "${WSRC:-../src}"; find . -type d -print0 ) | xargs -0 mkdir -p
 		cd ..
 	else
-		print "No folders found. Nothing to create"
+		print "No directory found. Nothing to create"
 	fi
 }
 
@@ -77,7 +77,7 @@ function page_int {
 		print -u2 "No intrepreter found"
 		exit 1
 	fi
-	# More to come perhaps, with some others interpreters
+	# More to come perhaps, with some others interpreters.
 	case $INTERP in
 		smu) print "Converting from markdown using smu"; CINTERP="./interp/smu";;
 	esac
@@ -121,7 +121,7 @@ function gen_page_skel {
 		FILENOSRC="${f#*/}"
 		FILENOEXT="${FILENOSRC%%.*}"
 		FILEXPORT="${DEST:-dest}/${FILENOEXT}.html"
-		# We got the title from <h1>
+		# We got the title from <h1>.
 		ATIT="$(awk '/<h1>/{gsub(/\t/,"");gsub(/[</]|h1>/,"");gsub(/>|</,"");print " | "$0;exit}' $f)"
 		page_head > "$FILEXPORT"
 		"${CINTERP:-cat}" $f >> "$FILEXPORT"
@@ -135,7 +135,7 @@ function gen_page_skel {
 
 	# RSS / Atom
 	if [[ -n $FEED && $FEED = @([Yy]es|YES) ]]; then
-		# XML date, emulates $(date --rfc-3339=seconds) from GNU date
+		# XML date, emulates $(date --rfc-3339=seconds) from GNU date.
 		RDAT=$(LC_ALL=C date "+%Y-%m-%dT%H:%M:%SZ")
 		RSSF="${DEST:-dest}/${RSSDIR}atom.xml"
 		gen_site_xml > "$RSSF"
@@ -151,25 +151,28 @@ function gen_page_skel {
 		print '</feed>' >> "$RSSF"
 	fi
 
-	# We copy existing *.html files from src to dest
+	# We copy existing *.html files from src to dest.
 	for x in $(find "${SRC:-src}" -type f -iname "*.html"); do
 		if [[ -r ${DEST:-dest}/${x#*/} ]]; then
 			print "${DEST:-dest}/${x#*/} already exists"
 			continue
 		fi
-		cp $x "${DEST:-dest}/${x#*/}"
+		cp "$x" "${DEST:-dest}/${x#*/}"
 	done
 
-	# The code is easy to understand, right?
+	# Test if the file exists. Then find it/them and copy it/them to dest (supports multiple files with same name).
 	if [[ -n $FIL ]]; then
 		for y in $FIL; do
-			if [[ ! -r ${SRC:-src}/${y} ]]; then
+			if [[ -z $(find "${SRC:-src}" -type f -iname "$y") ]]; then
 				print "$y is missing"
 				continue
 			fi
-			cp "${SRC:-src}/${y}" "${DEST:-dest}/${y}"
+			for c in $(find "${SRC:-src}" -type f -iname "$y"); do
+				cp "${SRC:-src}/${c#*/}" "${DEST:-dest}/${c#*/}"
+			done
 		done
 	fi
+
 	cd ..
 	TOT=$(find "${RAC}/${DEST:-dest}" -type f | wc -l)
 	print "Generated $TOT files."
