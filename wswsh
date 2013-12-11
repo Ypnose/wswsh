@@ -2,10 +2,9 @@
 # 2013 - wswsh - Ypnose <linuxien[AT]legtux[DOT]org
 # wswsh
 
+# Copyright (c) 2013, Ypnose - All rights reserved.
 # This project is under BSD (3-Clause) License
 # See LICENSE for license details.
-# Copyright (c) 2013, Ypnose
-# All rights reserved.
 
 #set -x
 RAC="$1"
