@@ -62,16 +62,6 @@ function get_structure {
 	fi
 }
 
-# Rework this dark crap!!
-#function ignore_f {
-	#if [[ -n $IGNORE ]]; then
-		#for i in $IGNORE; do
-			#ARGS+="! -name ${i} "
-		#done
-	#fi
-	#print "$ARGS"
-#}
-
 function page_int {
 	if [[ -n $INTERP && ! -x ${RAC}/interp/${INTERP} ]]; then
 		print -u2 "No intrepreter found"
