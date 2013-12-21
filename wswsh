@@ -5,7 +5,6 @@
 # Copyright (c) 2013, Ypnose - All rights reserved.
 # This project is under BSD (3-Clause) License
 # See LICENSE for license details.
-
 #set -x
 RAC="$1"
 
@@ -23,60 +22,33 @@ function parse_config {
 }
 
 function verify_dirs {
-	if [[ -n $SRC && -d ${RAC}/${SRC} ]]; then
-		print "Using custom sources from $SRC"
-		WSRC="../${SRC}"
-	elif [[ -z $SRC && -d ${RAC}/src ]]; then
-		print "Using sources from default directory src"
-	else
+	if [[ ! -d ${RAC}/src ]]; then
 		print -u2 "src doesn't exist"
 		exit 1
 	fi
-
-	if [[ -n $DEST ]]; then
-		if [[ -d ${RAC}/${DEST} ]]; then
-			print "Using custom directory $DEST"
-		else
-			print "Creating directory $DEST"
-			mkdir "$DEST"
-		fi
-	else
-		print "Using default directory dest"
-		[[ ! -d ${RAC}/dest ]] && mkdir "${RAC}/dest"
-	fi
+	[[ ! -d ${RAC}/dest ]] && mkdir "${RAC}/dest"
 }
 
 function get_structure {
 	# Add a fuckin' message?
 	verify_dirs
-	if [[ -n $(find "${RAC}/${SRC:-src}" -type d -print) ]]; then
+	if [[ -n $(find "${RAC}/src" -type d -print) ]]; then
 		# The following line works with GNU find:
-		# find "${RAC}/${SRC:-src}" -type d -printf "${DEST}/%P\0" | xargs -0 mkdir -p
+		# find "${RAC}/src" -type d -printf "dest/%P\0" | xargs -0 mkdir -p
 		# I finally decided to write lines "compatible" with {Mir,Open}BSD. Here we go:
-		cd "${RAC}/${DEST:-dest}"
-		( cd "${WSRC:-../src}"; find . -type d -print0 ) | xargs -0 mkdir -p
+		cd "${RAC}/dest"
+		( cd ../src; find . -type d -print0 ) | xargs -0 mkdir -p
 		cd ..
 	else
 		print "No directory found. Nothing to create"
 	fi
 }
 
-function page_int {
-	if [[ -n $INTERP && ! -x ${RAC}/interp/${INTERP} ]]; then
-		print -u2 "No intrepreter found"
-		exit 1
-	fi
-	# More to come perhaps, with some others interpreters.
-	case $INTERP in
-		smu) print "Converting from markdown using smu"; CINTERP="./interp/smu";;
-	esac
-}
-
 function parse_css_f {
-	if [[ -n $CSSF && -r ${RAC}/${SRC:-src}/${CSSF} ]]; then
+	if [[ -n $CSSF && -r ${RAC}/src/${CSSF} ]]; then
 		CSSV=1
 		print "Using custom CSS style"
-		cp "${RAC}/${SRC:-src}/${CSSF}" "${RAC}/${DEST:-dest}/${CSSF}"
+		cp "${RAC}/src/${CSSF}" "${RAC}/dest/${CSSF}"
 	fi
 }
 
@@ -84,15 +56,12 @@ function do_backup {
 	if [[ -n $BACKUP ]]; then
 		if [[ -d $BACKUP ]]; then
 			WHEN="$(date "+%Y-%m-%d")"
-			rm -R "${BACKUP}/${SRC:-src}_"*
-			cp -R "${RAC}/${SRC:-src}" "${BACKUP}/${SRC:-src}_${WHEN}"
-			if [[ -x ${BACKUP}/wswsh && -r ${BACKUP}/wswsh.conf ]]; then
-				[[ -n $(diff -q "${RAC}/wswsh" "${BACKUP}/wswsh") ]] && cp -f "${RAC}/wswsh" "${BACKUP}/wswsh"
-				[[ -n $(diff -q "${RAC}/wswsh.conf" "${BACKUP}/wswsh.conf") ]] && cp -f "${RAC}/wswsh.conf" "${BACKUP}/wswsh.conf"
-			else
+			rm -R "${BACKUP}/src_"*
+			cp -R "${RAC}/src" "${BACKUP}/src_${WHEN}"
+			
 				cp "${RAC}/wswsh" "${BACKUP}/wswsh"
 				cp "${RAC}/wswsh.conf" "${BACKUP}/wswsh.conf"
-			fi
+			
 		else
 			print -u2 "Directory doesn't exist!"
 		fi
@@ -102,18 +71,17 @@ function do_backup {
 # Generate the page
 function gen_page_skel {
 	parse_css_f
-	page_int
-	PAGES="$(find "${RAC}/${SRC:-src}" -type f -iname "*.${EXT:-txt}")"
+	PAGES="$(find "${RAC}/src" -type f -iname "*.${EXT:-txt}")"
 	print "Generating pages..."
 	cd "$RAC"
-	for f in $(find "${SRC:-src}" -type f -iname "*.${EXT:-txt}"); do
+	for f in $(find src -type f -iname "*.${EXT:-txt}"); do
 		FILENOSRC="${f#*/}"
 		FILENOEXT="${FILENOSRC%%.*}"
-		FILEXPORT="${DEST:-dest}/${FILENOEXT}.html"
+		FILEXPORT="dest/${FILENOEXT}.html"
 		# We got the title from <h1>.
 		ATIT="$(awk '/<h1>/{gsub(/\t/,"");gsub(/[</]|h1>/,"");gsub(/>|</,"");print " | "$0;exit}' $f)"
 		page_head > "$FILEXPORT"
-		"${CINTERP:-cat}" $f >> "$FILEXPORT"
+		"${INTERP:-cat}" $f >> "$FILEXPORT"
 		page_foot >> "$FILEXPORT"
 		RET=$?
 		if (( RET != 0 )); then
@@ -126,9 +94,9 @@ function gen_page_skel {
 	if [[ -n $FEED && $FEED = @([Yy]es|YES) ]]; then
 		# XML date, emulates $(date --rfc-3339=seconds) from GNU date.
 		RDAT=$(LC_ALL=C date "+%Y-%m-%dT%H:%M:%SZ")
-		RSSF="${DEST:-dest}/${RSSDIR}atom.xml"
+		RSSF="dest/${RSSDIR}atom.xml"
 		gen_site_xml > "$RSSF"
-		for z in $(find "${SRC:-src}/blog/" -mindepth 2 -type f -iname "*.${EXT:-txt}"); do # Modify location!
+		for z in $(find "src/blog/" -mindepth 2 -type f -iname "*.${EXT:-txt}"); do
 			# Don't need to enable a specific hour, let's assume I wrote the pages at midnight.
 			RDADAT="$(awk '/<!--/{gsub(/\t/,"");gsub(/<!-- | -->/,"");print $0"T00:00:00Z";exit}' $z)"
 			RSSDES="$(awk '/<!-- DESC: /{gsub(/\t/,"");gsub(/<!-- DESC: | -->/,"");print $0;exit}' $z)"
@@ -141,29 +109,29 @@ function gen_page_skel {
 	fi
 
 	# We copy existing *.html files from src to dest.
-	for x in $(find "${SRC:-src}" -type f -iname "*.html"); do
-		if [[ -r ${DEST:-dest}/${x#*/} ]]; then
-			print "${DEST:-dest}/${x#*/} already exists"
+	for x in $(find "src" -type f -iname "*.html"); do
+		if [[ -r dest/${x#*/} ]]; then
+			print "dest/${x#*/} already exists"
 			continue
 		fi
-		cp "$x" "${DEST:-dest}/${x#*/}"
+		cp "$x" "dest/${x#*/}"
 	done
 
 	# Test if the file exists. Then find it/them and copy it/them to dest (supports multiple files with same name).
 	if [[ -n $FIL ]]; then
 		for y in $FIL; do
-			if [[ -z $(find "${SRC:-src}" -type f -iname "$y") ]]; then
+			if [[ -z $(find "src" -type f -name "$y") ]]; then
 				print "$y is missing"
 				continue
 			fi
-			for c in $(find "${SRC:-src}" -type f -iname "$y"); do
-				cp "${SRC:-src}/${c#*/}" "${DEST:-dest}/${c#*/}"
+			for c in $(find "src" -type f -name "$y"); do
+				cp "src/${c#*/}" "dest/${c#*/}"
 			done
 		done
 	fi
 
 	cd ..
-	TOT=$(find "${RAC}/${DEST:-dest}" -type f | wc -l)
+	TOT=$(find "${RAC}/dest" -type f | wc -l)
 	print "Generated $TOT files."
 }
 
@@ -178,19 +146,11 @@ function page_head {
 	[[ -n $WTIT ]] && print "	<title>${WTIT}${ATIT}</title>"
 	print '</head>
 <body>
-	<header></header>
-	<nav>
-		<ul>
-			<li>TITLE1</li>
-			<li>TITLE2</li>
-			<li>TITLE3</li>
-		</ul>
-	</nav>'
+	<div>FOO</div>'
 }
 
 function page_foot {
-	print '	<footer></footer>
-	<!-- Page generated by wswsh - '"$(LC_ALL=C date)"' -->
+	print '	<!-- Page generated by wswsh - '"$(LC_ALL=C date)"' -->
 </body>
 </html>'
 }
