@@ -22,7 +22,6 @@ Create a directory including the following files:
 	wswsh.conf.example
 
 You'll need a config file. Run `make wswsh.conf`. Edit it according to your needs. The comments explain almost everything.  
-If you change `DEST` in `wswsh.conf`, you may need to hack the `Makefile` a little bit.
 
 ``` makefile
 PREFIX   = ${HOME}/Repos/Wswsh
@@ -37,18 +36,18 @@ A typical hierarchy contains a `src` directory, with your website inside it.
 	│   ├── css
 	│   │   └── style.css
 	│   ├── blog
-	│   │   └── my_post.wshtml
+	│   │   └── my_post.txt
 	│   ├── me
-	│   │   └── john_doe.wshtml
+	│   │   └── john_doe.txt
 	│   └── foo
 	│       └── baz
-	│           └── this_is_a_test.wshtml
+	│           └── this_is_a_test.txt
 	├── wswsh
 	└── wswsh.conf
 
-Each folder in `src` will be reproduced in a new directory called `dest` (assuming you didn't change the `DEST`).
-*wswsh* supports [smu](https://github.com/Gottox/smu) with revision `2c7b9d2ec0`. If you write your posts in markdown, you should use `.md`, `.markdown` or `.txt` extensions.
-By default, there is no interpreter, only `cat` is used.
+Each folder in `src` will be reproduced in a new directory called `dest`.
+*wswsh* supports [smu](https://github.com/Gottox/smu) with revision `2c7b9d2ec0`. If you write your posts in markdown, you should smu + `.md`, `.markdown` or `.txt` extensions.
+By default, there is no interpreter, only `cat` is used. It involves posts written in HTML.
 
 When you're ready, launch `make gen` (or `make regen` if you did it already). `make regen` deletes an existing `dest` folder.  
 Using the previous example, we now have:
@@ -69,12 +68,12 @@ Using the previous example, we now have:
 	│   ├── css
 	│   │   └── style.css
 	│   ├── blog
-	│   │   └── my_post.wshtml
+	│   │   └── my_post.txt
 	│   ├── me
-	│   │   └── john_doe.wshtml
+	│   │   └── john_doe.txt
 	│   └── foo
 	│       └── baz
-	│           └── this_is_a_test.wshtml
+	│           └── this_is_a_test.txt
 	├── wswsh
 	└── wswsh.conf
 
