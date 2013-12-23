@@ -1,0 +1,18 @@
+<!-- Post example when you use markdown. You can change the extension. -->
+
+<!-- Optional, needed by the RSS. -->
+
+<!-- 2013-01-01 -->
+<!-- DESC: This is my first foo -->
+
+<!-- Required by wswsh -->
+# YES? NO? YES? NO? OK, GO FOR YNO!     => Page title. Put one # at least.
+<!-- Only the first # is used, the others are ignored. -->
+
+John Doe is famous. Actually I do not why. I prefer Dupond.
+
+Blablabla
+
+bla............
+
+...
