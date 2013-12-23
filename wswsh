@@ -8,10 +8,6 @@
 #set -x
 RAC="$1"
 
-function usage {
-	print "usage: wswsh [website_root]"
-}
-
 function parse_config {
 	if [[ -r ${RAC}/wswsh.conf ]]; then
 		. "${RAC}/wswsh.conf"
@@ -30,7 +26,6 @@ function verify_dirs {
 }
 
 function get_structure {
-	# Add a fuckin' message?
 	verify_dirs
 	if [[ -n $(find "${RAC}/src" -type d -print) ]]; then
 		# The following line works with GNU find:
@@ -56,19 +51,22 @@ function do_backup {
 	if [[ -n $BACKUP ]]; then
 		if [[ -d $BACKUP ]]; then
 			WHEN="$(date "+%Y-%m-%d")"
-			rm -R "${BACKUP}/src_"*
-			cp -R "${RAC}/src" "${BACKUP}/src_${WHEN}"
-			
-				cp "${RAC}/wswsh" "${BACKUP}/wswsh"
-				cp "${RAC}/wswsh.conf" "${BACKUP}/wswsh.conf"
-			
+			rm -R "${BACKUP}/src_"* && cp -R "${RAC}/src" "${BACKUP}/src_${WHEN}"
+			cp "${RAC}/wswsh" "${BACKUP}/wswsh" && cp "${RAC}/wswsh.conf" "${BACKUP}/wswsh.conf"
 		else
 			print -u2 "Directory doesn't exist!"
 		fi
 	fi
 }
 
-# Generate the page
+function parse_file {
+	# We got the title from <h1> or #. Add what you want...
+	case $INTERP in
+		smu) ATIT="$(awk '/\#/{gsub(/\# /,"");print $0;exit}' $f)";;
+		*) ATIT="$(awk '/<h1>/{gsub(/\t/,"");gsub(/[</]|h1>/,"");gsub(/>|</,"");print $0;exit}' $f)";;
+	esac
+}
+
 function gen_page_skel {
 	parse_css_f
 	PAGES="$(find "${RAC}/src" -type f -iname "*.${EXT:-txt}")"
@@ -78,8 +76,7 @@ function gen_page_skel {
 		FILENOSRC="${f#*/}"
 		FILENOEXT="${FILENOSRC%%.*}"
 		FILEXPORT="dest/${FILENOEXT}.html"
-		# We got the title from <h1>.
-		ATIT="$(awk '/<h1>/{gsub(/\t/,"");gsub(/[</]|h1>/,"");gsub(/>|</,"");print " | "$0;exit}' $f)"
+		parse_file
 		page_head > "$FILEXPORT"
 		"${INTERP:-cat}" $f >> "$FILEXPORT"
 		page_foot >> "$FILEXPORT"
@@ -96,13 +93,13 @@ function gen_page_skel {
 		RDAT=$(LC_ALL=C date "+%Y-%m-%dT%H:%M:%SZ")
 		RSSF="dest/${RSSDIR}atom.xml"
 		gen_site_xml > "$RSSF"
-		for z in $(find "src/blog/" -mindepth 2 -type f -iname "*.${EXT:-txt}"); do
+		for f in $(find "src/blog/" -mindepth 2 -type f -iname "*.${EXT:-txt}"); do
 			# Don't need to enable a specific hour, let's assume I wrote the pages at midnight.
-			RDADAT="$(awk '/<!--/{gsub(/\t/,"");gsub(/<!-- | -->/,"");print $0"T00:00:00Z";exit}' $z)"
-			RSSDES="$(awk '/<!-- DESC: /{gsub(/\t/,"");gsub(/<!-- DESC: | -->/,"");print $0;exit}' $z)"
-			RSSTIT="$(awk '/<h1>/{gsub(/\t/,"");gsub(/[</]|h1>/,"");gsub(/>|</,"");print $0;exit}' $z)"
-			RSSTNOSRC="${z#*/}"
+			RDADAT="$(awk '/<!--/{gsub(/\t/,"");gsub(/<!-- | -->/,"");print $0"T00:00:00Z";exit}' $f)"
+			RSSDES="$(awk '/<!-- DESC: /{gsub(/\t/,"");gsub(/<!-- DESC: | -->/,"");print $0;exit}' $f)"
+			RSSTNOSRC="${f#*/}"
 			RSSTNOEXT="${RSSTNOSRC%%.*}"
+			parse_file
 			xml_content >> "$RSSF"
 		done
 		print '</feed>' >> "$RSSF"
@@ -143,7 +140,7 @@ function page_head {
 	<meta charset="utf-8" />
 	<meta name="author" content="John Foo" />'
 	(( CSSV == 1 )) && print "	<link rel=\"stylesheet\" type=\"text/css\" href=\"/${CSSF}\" />"
-	[[ -n $WTIT ]] && print "	<title>${WTIT}${ATIT}</title>"
+	[[ -n $WTIT ]] && print "	<title>${WTIT}${ATIT:+ | }${ATIT}</title>"
 	print '</head>
 <body>
 	<div>FOO</div>'
@@ -172,17 +169,17 @@ function gen_site_xml {
 
 function xml_content {
 	print '	<entry>
-		<title>'"${RSSTIT}"'</title>
+		<title>'"${ATIT}"'</title>
 		<link href="http://'${WURL}'/'${RSSTNOEXT}'.html"/>
 		<id>http://'"${WURL}"'/'"${RSSTNOEXT}"'.html</id>
 		<updated>'"${RDADAT}"'</updated>
 		<summary>'"${RSSDES}"'</summary>
-	 </entry>
+	</entry>
 '
 }
 
 if [[ -z $1 ]]; then
-	usage
+	print -u2 "usage: wswsh [website_root]"
 	exit 1
 fi
 
@@ -191,4 +188,4 @@ get_structure
 gen_page_skel
 do_backup
 
-exit 0
+exit

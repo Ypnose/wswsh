@@ -12,7 +12,6 @@
 
 # Write the other interpreter (smu for example, tested with 2c7b9d2ec0 rev).
 # https://github.com/Gottox/smu
-# You must place the executable in a directory called "interp".
 # You can leave this option if you only concatenate files.
 #INTERP=""
 
@@ -25,13 +24,6 @@
 # For example, if you choose txt, it'll "use" files with the
 # following extensions: txt,TXT,txT,TxT,tXt and so on.
 #EXT=""
-
-# Source files and destination files.
-# Better to avoid spaces in directories names.
-# If SRC isn't defined, src/ is the source dir.
-# If DEST isn't defined, dest/ is the destination dir.
-#SRC=""
-#DEST=""
 
 # CSS style. Pretty obvious, right?
 # Write entire location from the src directory.
