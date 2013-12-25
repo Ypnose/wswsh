@@ -1,26 +1,24 @@
 # 2013 - wswsh - Ypnose <linuxien[AT]legtux[DOT]org
 # Makefile for wswsh - see LICENSE for copyright and license
-# If you modified $DEST in wswsh.conf, you should probably hack this Makefile.
 
-SOFT     = wswsh
-PREFIX   = ${HOME}/Repos/Wswsh
-DEST     = ${PREFIX}/dest
+SOFT = wswsh
+VERSION = 1.1
+PREFIX = ${HOME}/Repos/Wswsh
+DESTPREFIX = ${PREFIX}/dest
 
-all: gen
+all: options gen
 
 options:
-	@echo ${SOFT} build options:
+	@echo ${SOFT} ${VERSION} build options:
 	@echo "PREFIX  = ${PREFIX}"
-	@echo "DEST    = ${DEST}"
 
 wswsh.conf:
-	@echo creating config from wswsh.conf.example
-	@cp wswsh.conf.example $@
-	@echo you may take a look at $@
+	@echo creating config from wswsh.conf.default
+	@cp wswsh.conf.default $@
 
-clean: ${DEST}
+clean: ${DESTPREFIX}
 	@echo removing dest
-	@rm -r ${DEST}
+	@rm -r ${DESTPREFIX}
 
 gen:
 	@./wswsh ${PREFIX}
@@ -29,9 +27,9 @@ regen: clean gen
 
 generate: gen
 
-purge: wswsh.conf ${DEST}
+purge: wswsh.conf ${DESTPREFIX}
 	@echo purging the config and dest
 	@rm wswsh.conf
-	@rm -r ${DEST}
+	@rm -r ${DESTPREFIX}
 
 .PHONY: all options clean gen regen generate purge

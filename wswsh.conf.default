@@ -1,5 +1,5 @@
 # 2013 - wswsh - Ypnose <linuxien[AT]legtux[DOT]org
-# wswsh.conf.example
+# wswsh.conf.default
 
 # One config per website.
 
@@ -10,7 +10,7 @@
 # Used inside the feed.
 #WURL=""
 
-# Write the other interpreter (smu for example, tested with 2c7b9d2ec0 rev).
+# Write the other interpreter (smu, tested with 2c7b9d2ec0 rev).
 # https://github.com/Gottox/smu
 # You can leave this option if you only concatenate files.
 #INTERP=""

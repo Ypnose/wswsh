@@ -1,7 +1,7 @@
 wswsh - [w]eb [s]ucks [w]ithout [sh]ell
 -------------------------------------
 
-wswsh is a static website framework using shell. It means [w]eb [s]ucks [w]ithout [sh]ell. Simple name for a simple script.
+wswsh is a static website script using shell. It means [w]eb [s]ucks [w]ithout [sh]ell. Simple name for a simple script.
 It has many advantages:
   * Lightweight
   * Only requires a shell + UNIX utilities
@@ -19,7 +19,7 @@ Create a directory including the following files:
 
 	Makefile
 	wswsh
-	wswsh.conf.example
+	wswsh.conf.default
 
 You'll need a config file. Run `make wswsh.conf`. Edit it according to your needs. The comments explain almost everything.  
 
