@@ -10,7 +10,7 @@ function parse_config {
 	if [[ -r ${RAC}/wswsh.conf && -r ${RAC}/layouts/template ]]; then
 		. "${RAC}/wswsh.conf" && . "${RAC}/layouts/template"
 	else
-		print -u2 "Missing configs / templates"
+		print -u2 "Missing configs / template"
 		exit 1
 	fi
 }

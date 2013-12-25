@@ -7,7 +7,7 @@ It has many advantages:
   * Only requires a shell + UNIX utilities
   * Markdown / smu support
   * Human readable configuration
-  * 200 LOC
+  * Less than 140 LOC (without layouts)
   * Atom 1.0 Feed support
 
 *You can read another howto with examples [here](http://blog.ypnose.org) (might be useful).*
@@ -22,11 +22,6 @@ Create a directory including the following files:
 	wswsh.conf.default
 
 You'll need a config file. Run `make wswsh.conf`. Edit it according to your needs. The comments explain almost everything.  
-
-``` makefile
-PREFIX   = ${HOME}/Repos/Wswsh
-DEST     = ${PREFIX}/dest
-```
 
 A typical hierarchy contains a `src` directory, with your website inside it.
 
