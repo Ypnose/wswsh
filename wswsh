@@ -93,8 +93,8 @@ function gen_page_skel {
 		gen_site_xml > "$RSSF"
 		for f in $(find "src/blog/" -mindepth 2 -type f -iname "*.${EXT:-txt}"); do
 			# Don't need to enable a specific hour, let's assume I wrote the pages at midnight.
-			RDADAT="$(awk '/<!--/{gsub(/\t/,"");gsub(/<!-- | -->/,"");print $0"T00:00:00Z";exit}' $f)"
-			RSSDES="$(awk '/<!-- DESC: /{gsub(/\t/,"");gsub(/<!-- DESC: | -->/,"");print $0;exit}' $f)"
+			RDADAT="$(awk '/<!-- DATE:/{gsub(/\t/,"");gsub(/<!-- DATE: | -->/,"");print $0"T00:00:00Z";exit}' $f)"
+			RSSDES="$(awk '/<!-- DESC:/{gsub(/\t/,"");gsub(/<!-- DESC: | -->/,"");print $0;exit}' $f)"
 			RSSTNOSRC="${f#*/}"
 			RSSTNOEXT="${RSSTNOSRC%%.*}"
 			parse_file
