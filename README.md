@@ -17,6 +17,7 @@ How to use it
 
 Create a directory including the following files:
 
+	layouts (includes template)
 	Makefile
 	wswsh
 	wswsh.conf.default
@@ -26,6 +27,8 @@ You'll need a config file. Run `make wswsh.conf`. Edit it according to your need
 A typical hierarchy contains a `src` directory, with your website inside it.
 
 	.
+	├── layouts
+	│   └── template
 	├── Makefile
 	├── src
 	│   ├── css
@@ -48,6 +51,8 @@ When you're ready, launch `make gen` (or `make regen` if you did it already). `m
 Using the previous example, we now have:
 
 	.
+	├── layouts
+	│   └── template
 	├── Makefile
 	├── dest
 	│   ├── css
