@@ -7,10 +7,10 @@
 RAC="$1"
 
 function parse_config {
-	if [[ -r ${RAC}/wswsh.conf && -r ${RAC}/layouts/template ]]; then
-		. "${RAC}/wswsh.conf" && . "${RAC}/layouts/template"
+	if [[ -r ${RAC}/wswsh.conf && -r ${RAC}/includes/layout ]]; then
+		. "${RAC}/wswsh.conf" && . "${RAC}/includes/layout"
 	else
-		print -u2 "Missing configs / template"
+		print -u2 "Missing configs / layout"
 		exit 1
 	fi
 }
@@ -50,6 +50,7 @@ function do_backup {
 		if [[ -d $BACKUP ]]; then
 			WHEN="$(date "+%Y-%m-%d")"
 			rm -R "${BACKUP}/src_"* && cp -R "${RAC}/src" "${BACKUP}/src_${WHEN}"
+			rm -R "${BACKUP}/includes_"* && cp -R "${RAC}/includes" "${BACKUP}/includes_${WHEN}"
 			cp "${RAC}/wswsh" "${BACKUP}/wswsh" && cp "${RAC}/wswsh.conf" "${BACKUP}/wswsh.conf"
 		else
 			print -u2 "Directory doesn't exist!"
