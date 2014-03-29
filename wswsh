@@ -1,6 +1,6 @@
 #!/usr/bin/mksh
-# 2013 - wswsh - Ypnose <linuxien[AT]legtux[DOT]org
-# Copyright (c) 2013, Ypnose - All rights reserved.
+# 2013-2014 - wswsh - Ypnose <linuxien[AT]legtux[DOT]org
+# Copyright (c) 2013-2014, Ypnose - All rights reserved.
 # This project is under BSD (3-Clause) License
 # See LICENSE for license details.
 #set -x
@@ -62,7 +62,7 @@ function parse_file {
 	# We got the title from <h1> or #. Add what you want...
 	case $INTERP in
 		smu) ATIT="$(awk '/\#/{gsub(/\# /,"");print $0;exit}' $f)";; # We can't use 'print " | "$0' because the variable is used two times.
-		*) ATIT="$(awk '/<h1>/{gsub(/\t/,"");gsub(/[</]|h1>/,"");gsub(/>|</,"");print $0;exit}' $f)";; # ^
+		*) ATIT="$(awk '/<h1>/{gsub(/\t/,"");gsub(/[</]|h1>/,"");gsub(/>|</,"");print $0;exit}' $f)";; # ^SAME
 	esac
 }
 
@@ -91,8 +91,11 @@ function gen_page_skel {
 		# XML date, emulates $(date --rfc-3339=seconds) from GNU date.
 		RDAT=$(LC_ALL=C date "+%Y-%m-%dT%H:%M:%SZ")
 		RSSF="dest/${RSSDIR}atom.xml"
+		SORD="$(for f in $(find "src/blog/" -mindepth 2 -type f -iname "*.${EXT:-txt}"); \
+			do awk '/<!-- DATE:/{gsub(/\t/,"");gsub(/<!-- DATE: | -->/,"");printf "%s",$0;exit}' $f; \
+			print " $f"; done | sort -n | awk '{gsub(/201[2-8]-[0-1][0-9]-[0-3][0-9] /,"");print}')"
 		gen_site_xml > "$RSSF"
-		for f in $(find "src/blog/" -mindepth 2 -type f -iname "*.${EXT:-txt}"); do
+		for f in $SORD; do
 			# Don't need to enable a specific hour, let's assume I wrote the pages at midnight.
 			RDADAT="$(awk '/<!-- DATE:/{gsub(/\t/,"");gsub(/<!-- DATE: | -->/,"");print $0"T00:00:00Z";exit}' $f)"
 			RSSDES="$(awk '/<!-- DESC:/{gsub(/\t/,"");gsub(/<!-- DESC: | -->/,"");print $0;exit}' $f)"
