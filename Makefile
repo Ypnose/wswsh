@@ -1,4 +1,4 @@
-# 2013 - wswsh - Ypnose <linuxien[AT]legtux[DOT]org
+# 2013 - wswsh - Ypnose - http://ypnose.org
 # Makefile for wswsh - see LICENSE for copyright and license
 
 SOFT = wswsh
