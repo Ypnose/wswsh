@@ -44,7 +44,7 @@ A typical hierarchy contains a `src` directory, with your website inside it.
 	└── wswsh.conf
 
 Each folder in `src` will be reproduced in a new directory called `dest`.
-*wswsh* supports [smu](https://github.com/Gottox/smu) with revision `2c7b9d2ec0`. If you write your posts in markdown, you should smu + `.md`, `.markdown` or `.txt` extensions.
+*wswsh* supports [smu](https://github.com/Gottox/smu) with revision `2c7b9d2ec0`. If you write your posts in markdown, you should use smu + `.md`, `.markdown` or `.txt` extensions.
 By default, there is no interpreter, only `cat` is used. It involves posts written in HTML.
 
 When you're ready, launch `make gen` (or `make regen` if you did it already). `make regen` deletes an existing `dest` folder.  
