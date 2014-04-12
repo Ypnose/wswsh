@@ -59,11 +59,11 @@ function do_backup {
 }
 
 function parse_file {
-	# We got the title from <h1> or #. Add what you want...
 	if [[ -n $INTERP && -z $(whence $INTERP) ]]; then
 		print -u2 "$INTERP not found"
 		exit 1
 	fi
+	# We got the title from <h1> or #. Add what you want...
 	case $INTERP in
 		smu) ATIT="$(awk '/\#/{gsub(/^[\t ]+|#[\t ]+/,"");print $0;exit}' $f)";; # We can't use 'print " | "$0' because the variable is used two times.
 		*) ATIT="$(awk '/<h1>/{gsub(/^[\t ]+|[<\/>]|h1/,"");print $0;exit}' $f)";; # ^SAME
