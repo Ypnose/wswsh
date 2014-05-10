@@ -10,7 +10,7 @@ It has many advantages:
   * Less than 140 LOC (without layouts)
   * Atom 1.0 Feed support
 
-*You can read another howto with examples [here](http://blog.ypnose.org) (might be useful).*
+*You can read another howto with examples [here](http://blog.ypnose.org/2013/blogging-shell.html) (might be useful).*
 
 How to use it
 ------------
