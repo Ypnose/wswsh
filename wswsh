@@ -65,27 +65,27 @@ function parse_file {
 	fi
 	# We got the title from <h1> or #. Add what you want...
 	case $INTERP in
-		smu) ATIT="$(awk '/\#/{gsub(/^[\t ]+|#[\t ]+/,"");print $0;exit}' $f)";; # We can't use 'print " | "$0' because the variable is used two times.
-		*) ATIT="$(awk '/<h1>/{gsub(/^[\t ]+|[<\/>]|h1/,"");print $0;exit}' $f)";; # ^SAME
+		smu) ATIT="$(awk '/\#/{gsub(/^[\t ]+|#[\t ]+/,"");print $0;exit}' $LINE)";; # We can't use 'print " | "$0' because the variable is used two times.
+		*) ATIT="$(awk '/<h1>/{gsub(/^[\t ]+|[<\/>]|h1/,"");print $0;exit}' $LINE)";; # ^SAME
 	esac
 }
 
 function gen_page_skel {
 	parse_css_f
-	PAGES="$(find "${RAC}/src" -type f -iname "*.${EXT:-txt}")"
+	#PAGES="$(find "${RAC}/src" -type f -iname "*.${EXT:-txt}")"
 	print "Generating pages..."
 	cd "$RAC"
-	for f in $(find src -type f -iname "*.${EXT:-txt}"); do
-		FILENOSRC="${f#*/}"
+	find "src" -type f -iname "*.${EXT:-txt}" | while IFS=$'\n' read -r LINE; do
+		FILENOSRC="${LINE#*/}"
 		FILENOEXT="${FILENOSRC%%.*}"
 		FILEXPORT="dest/${FILENOEXT}.html"
 		parse_file
 		page_head > "$FILEXPORT"
-		"${INTERP:-cat}" $f >> "$FILEXPORT"
+		"${INTERP:-cat}" "$LINE" >> "$FILEXPORT"
 		page_foot >> "$FILEXPORT"
 		RET=$?
 		if (( RET != 0 )); then
-			print -u2 "Generating $f failed"
+			print -u2 "Generating $LINE failed"
 			exit 1
 		fi
 	done
@@ -95,15 +95,15 @@ function gen_page_skel {
 		# XML date, emulates $(date --rfc-3339=seconds) from GNU date.
 		RDAT=$(LC_ALL=C date "+%Y-%m-%dT%H:%M:%SZ")
 		RSSF="dest/${RSSDIR}atom.xml"
-		SORD="$(for f in $(find "src/blog/" -mindepth 2 -type f -iname "*.${EXT:-txt}"); \
-			do awk '/<!-- DATE:/{gsub(/^[\t ]+|<!-- DATE: | -->/,"");printf "%s",$0;exit}' $f; \
-			print " $f"; done | sort -n | awk '{gsub(/201[2-8]-[0-1][0-9]-[0-3][0-9] /,"");print}')"
+		SORD="$(find "src/blog/" -mindepth 2 -type f -iname "*.${EXT:-txt}" | while IFS=$'\n' read -r ART do; \
+			do awk '/<!-- DATE:/{gsub(/^[\t ]+|<!-- DATE: | -->/,"");printf "%s",$0;exit}' $ART; \
+			print " $ART"; done | sort -n | awk '{gsub(/201[2-8]-[0-1][0-9]-[0-3][0-9] /,"");print}')"
 		gen_site_xml > "$RSSF"
-		for f in $SORD; do
+		print "$SORD" | while IFS=$'\n' read -r LINE; do
 			# Don't need to enable a specific hour, let's assume I wrote the pages at midnight.
-			RDADAT="$(awk '/<!-- DATE:/{gsub(/^[\t ]+|<!-- DATE: | -->/,"");print $0"T00:00:00Z";exit}' $f)"
-			RSSDES="$(awk '/<!-- DESC:/{gsub(/^[\t ]+|<!-- DESC: | -->/,"");print $0;exit}' $f)"
-			RSSTNOSRC="${f#*/}"
+			RDADAT="$(awk '/<!-- DATE:/{gsub(/^[\t ]+|<!-- DATE: | -->/,"");print $0"T00:00:00Z";exit}' $LINE)"
+			RSSDES="$(awk '/<!-- DESC:/{gsub(/^[\t ]+|<!-- DESC: | -->/,"");print $0;exit}' $LINE)"
+			RSSTNOSRC="${LINE#*/}"
 			RSSTNOEXT="${RSSTNOSRC%%.*}"
 			parse_file
 			xml_content >> "$RSSF"
@@ -112,12 +112,12 @@ function gen_page_skel {
 	fi
 
 	# We copy existing *.html files from src to dest.
-	for x in $(find "src" -type f -iname "*.html"); do
-		if [[ -r dest/${x#*/} ]]; then
-			print "dest/${x#*/} already exists"
+	find "src" -type f -iname "*.html" | while IFS=$'\n' read -r LINEH; do
+		if [[ -r dest/${LINEH#*/} ]]; then
+			print "dest/${LINEH#*/} already exists"
 			continue
 		fi
-		cp "$x" "dest/${x#*/}"
+		cp "$LINEH" "dest/${LINEH#*/}"
 	done
 
 	# Test if the file exists. Then find it/them and copy it/them to dest (supports multiple files with same name).
@@ -127,8 +127,8 @@ function gen_page_skel {
 				print "$y is missing"
 				continue
 			fi
-			for c in $(find "src" -type f -name "$y"); do
-				cp "src/${c#*/}" "dest/${c#*/}"
+			find "src" -type f -name "$y" | while IFS=$'\n' read -r LINEF; do
+				cp "src/${LINEF#*/}" "dest/${LINEF#*/}"
 			done
 		done
 	fi
