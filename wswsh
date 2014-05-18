@@ -59,10 +59,6 @@ function do_backup {
 }
 
 function parse_file {
-	if [[ -n $INTERP && -z $(whence $INTERP) ]]; then
-		print -u2 "$INTERP not found"
-		exit 1
-	fi
 	# We got the title from <h1> or #. Add what you want...
 	case $INTERP in
 		smu) ATIT="$(awk '/\#/{gsub(/^[\t ]+|#[\t ]+/,"");print $0;exit}' $LINE)";; # We can't use 'print " | "$0' because the variable is used two times.
@@ -72,7 +68,10 @@ function parse_file {
 
 function gen_page_skel {
 	parse_css_f
-	#PAGES="$(find "${RAC}/src" -type f -iname "*.${EXT:-txt}")"
+	if [[ -n $INTERP && -z $(whence $INTERP) ]]; then
+		print -u2 "$INTERP not found"
+		exit 1
+	fi
 	print "Generating pages..."
 	cd "$RAC"
 	find "src" -type f -iname "*.${EXT:-txt}" | while IFS=$'\n' read -r LINE; do
