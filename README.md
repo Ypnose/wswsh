@@ -84,5 +84,8 @@ Copyright
 
 Code created by Ypnose, under BSD (3-Clause) License. You could send me fresh beers.
 
-Powering http://blog.ypnose.org  
+Powering:
+ http://blog.ypnose.org
+ https://cosmofox.net/blog/
+
 If you use wswsh for your website, please contact me. I'll add your website in the README.
