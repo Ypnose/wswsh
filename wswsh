@@ -94,7 +94,7 @@ function gen_page_skel {
 		# XML date, emulates $(date --rfc-3339=seconds) from GNU date.
 		RDAT=$(LC_ALL=C date "+%Y-%m-%dT%H:%M:%SZ")
 		RSSF="dest/${RSSDIR}atom.xml"
-		SORD="$(find "src/blog/" -mindepth 2 -type f -iname "*.${EXT:-txt}" | while IFS=$'\n' read -r ART do; \
+		SORD="$(find "${ARTD:-src/blog/}" -mindepth 2 -type f -iname "*.${EXT:-txt}" | while IFS=$'\n' read -r ART do; \
 			do awk '/<!-- DATE:/{gsub(/^[\t ]+|<!-- DATE: | -->/,"");printf "%s",$0;exit}' $ART; \
 			print " $ART"; done | sort -n | awk '{gsub(/201[2-8]-[0-1][0-9]-[0-3][0-9] /,"");print}')"
 		gen_site_xml > "$RSSF"
