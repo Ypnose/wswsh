@@ -102,7 +102,7 @@ function gen_page_skel {
 		print "$SORD" | while IFS=$'\n' read -r LINE; do
 			# Don't need to enable a specific hour, let's assume I wrote the pages at midnight.
 			RDADAT="$(awk '/<!-- DATE:/{gsub(/^[\t ]+|<!-- DATE: | -->/,"");print $0"T00:00:00Z";exit}' $LINE)"
-			RSSDES="$(awk '/<!-- DESC:/{gsub(/^[\t ]+|<!-- DESC: | -->/,"");print $0;exit}' $LINE)"
+			RSSDES="$(awk '/<!--[\t ]*DESC/{gsub(/^[\t ]+|<!--[\t ]*DESC *: *|[\t ]*-->/,"");print $0;exit}' $LINE)"
 			RSSTNOSRC="${LINE#*/}"
 			RSSTNOEXT="${RSSTNOSRC%%.*}"
 			parse_file
