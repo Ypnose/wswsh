@@ -97,7 +97,7 @@ function gen_page_skel {
 		RSSF="dest/${RSSDIR}atom.xml"
 		SORD="$(find "${ARTD:-src/blog/}" -mindepth 2 -type f -iname "*.${EXT:-txt}" | while IFS=$'\n' read -r ART do; \
 			do awk '/<!-- DATE:/{gsub(/^[\t ]+|<!-- DATE: | -->/,"");printf "%s",$0;exit}' $ART; \
-			print " $ART"; done | sort -n | awk '{gsub(/201[2-8]-[0-1][0-9]-[0-3][0-9] /,"");print}')"
+			print " $ART"; done | sort -nr | awk '{gsub(/201[2-8]-[0-1][0-9]-[0-3][0-9] /,"");print}')"
 		gen_site_xml > "$RSSF"
 		print "$SORD" | while IFS=$'\n' read -r LINE; do
 			# Don't need to enable a specific hour, let's assume I wrote the pages at midnight.
