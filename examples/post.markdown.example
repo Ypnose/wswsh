@@ -1,7 +1,7 @@
 <!-- Post example when you use markdown. You can change the extension. -->
 
 <!-- Optional, needed by the RSS. -->
-
+<!-- date format: year-month-day (date "+%Y-%m-%d") -->
 <!-- DATE: 2013-01-01 -->
 <!-- DESC: This is my first foo -->
 
