@@ -62,7 +62,7 @@ function parse_file {
 	# We got the title from <h1> or #. Add what you want...
 	case $INTERP in
 		smu) ATIT="$(awk '/\#/{gsub(/^[\t ]+|#[\t ]+/,"");print $0;exit}' $LINE)";; # We can't use 'print " | "$0' because the variable is used two times.
-		*) ATIT="$(awk '/<h1>/{gsub(/^[\t ]+|[<\/>]|h1/,"");print $0;exit}' $LINE)";; # ^SAME
+		*) ATIT="$(awk '/<h1>/{gsub(/^[\t ]+|<h1>|<\/h1>.*/,"");print $0;exit}' $LINE)";; # ^SAME
 	esac
 }
 
@@ -91,7 +91,7 @@ function gen_page_skel {
 
 	# RSS / Atom
 	if [[ -n $FEED && $FEED = @([Yy]es|YES) ]]; then
-		[[ -n $ARTD && ! -d $ARTD ]] && print -u2 "You suck!" && exit 1
+		[[ -n $ARTD && ! -d $ARTD ]] && print -u2 "The article directory is missing!" && exit 1
 		# XML date, emulates $(date --rfc-3339=seconds) from GNU date.
 		RDAT=$(LC_ALL=C date "+%Y-%m-%dT%H:%M:%SZ")
 		RSSF="dest/${RSSDIR}atom.xml"
