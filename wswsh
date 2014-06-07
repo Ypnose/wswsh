@@ -95,6 +95,7 @@ function gen_page_skel {
 		# XML date, emulates $(date --rfc-3339=seconds) from GNU date.
 		RDAT=$(LC_ALL=C date "+%Y-%m-%dT%H:%M:%SZ")
 		RSSF="dest/${RSSDIR}atom.xml"
+		# Tip: date format -> year-month-day
 		SORD="$(find "${ARTD:-src/blog/}" -mindepth 2 -type f -iname "*.${EXT:-txt}" | while IFS=$'\n' read -r ART do; \
 			do awk '/<!--[\t ]*DATE/{gsub(/^[\t ]+|<!--[\t ]*DATE *: *|[\t ]*-->.*/,"");printf "%s",$0;exit}' $ART; \
 			print " $ART"; done | sort -nr | awk '{gsub(/201[2-8]-[0-1][0-9]-[0-3][0-9] /,"");print}')"
@@ -102,7 +103,7 @@ function gen_page_skel {
 		print "$SORD" | while IFS=$'\n' read -r LINE; do
 			# Don't need to enable a specific hour, let's assume I wrote the pages at midnight.
 			RDADAT="$(awk '/<!--[\t ]*DATE/{gsub(/^[\t ]+|<!--[\t ]*DATE *: *|[\t ]*-->.*/,"");print $0"T00:00:00Z";exit}' $LINE)"
-			RSSDES="$(awk '/<!--[\t ]*DESC/{gsub(/^[\t ]+|<!--[\t ]*DESC *: *|[\t ]*-->/,"");print $0;exit}' $LINE)"
+			RSSDES="$(awk '/<!--[\t ]*DESC/{gsub(/^[\t ]+|<!--[\t ]*DESC *: *|[\t ]*-->.*/,"");print $0;exit}' $LINE)"
 			RSSTNOSRC="${LINE#*/}"
 			RSSTNOEXT="${RSSTNOSRC%%.*}"
 			parse_file
