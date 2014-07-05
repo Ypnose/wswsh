@@ -1,5 +1,5 @@
 wswsh - [w]eb [s]ucks [w]ithout [sh]ell
--------------------------------------
+---------------------------------------
 
 wswsh is a static website script using shell. It means [w]eb [s]ucks [w]ithout [sh]ell. Simple name for a simple script.
 It has many advantages:
@@ -13,7 +13,7 @@ It has many advantages:
 *You can read another howto with examples [here](http://blog.ypnose.org/2013/blogging-shell.html) (might be useful).*
 
 How to use it
-------------
+-------------
 
 Create a directory including the following files:
 
@@ -79,8 +79,16 @@ Using the previous example, we now have:
 
 `dest` is your generated website. You can upload it.
 
+awk compatibility
+-----------------
+
+When I added awk regexes, one of my goal was to support `nawk`, `mawk` and `gawk`. `gawk` is very common
+among Linux distributions, so I didn't have the choice. The regexes were "created" on `mawk`. I tested
+the compatibility and it worked flawlessly with the required implementations.
+So, you can gain some precious seconds if you're brave enough to use `nawk` or `mawk`.
+
 Copyright
---------
+---------
 
 Code created by Ypnose, under BSD (3-Clause) License. You could send me fresh beers.
 
