@@ -84,7 +84,7 @@ awk compatibility
 
 When I added awk regexes, one of my goal was to support `nawk`, `mawk` and `gawk`. `gawk` is very common
 among Linux distributions, so I didn't have the choice. The regexes were "created" on `mawk`. I tested
-the compatibility and it worked flawlessly with the required implementations.
+the compatibility and it worked flawlessly with the required implementations.  
 So, you can gain some precious seconds if you're brave enough to use `nawk` or `mawk`.
 
 Copyright
