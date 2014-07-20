@@ -3,11 +3,13 @@ wswsh - [w]eb [s]ucks [w]ithout [sh]ell
 
 wswsh is a static website script using shell. It means [w]eb [s]ucks [w]ithout [sh]ell. Simple name for a simple script.
 It has many advantages:
+
   * Lightweight
   * Only requires a shell + UNIX utilities
   * Markdown / smu support
   * Human readable configuration
   * Less than 140 LOC (without layouts)
+  * Easily "hackable"
   * Atom 1.0 Feed support
 
 *You can read another howto with examples [here](http://blog.ypnose.org/2013/blogging-shell.html) (might be useful).*
@@ -78,6 +80,17 @@ Using the previous example, we now have:
 	└── wswsh.conf
 
 `dest` is your generated website. You can upload it.
+
+Note(s)
+-------
+
+If you use the same `wswsh` executable for your blogs (assuming you have several websites), it's possible to put `wswsh` in your `PATH`,
+instead of having a "redundant" file, on every directory. If you do that, you need to modify the `Makefile`:
+
+```make
+gen:
+@${SOFT} ${PWD}
+```
 
 awk compatibility
 -----------------
