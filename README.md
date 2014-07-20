@@ -14,8 +14,8 @@ It has many advantages:
 
 *You can read another howto with examples [here](http://blog.ypnose.org/2013/blogging-shell.html) (might be useful).*
 
-How to use it
--------------
+How to use it?
+--------------
 
 Create a directory including the following files:
 
@@ -85,12 +85,15 @@ Note(s)
 -------
 
 If you use the same `wswsh` executable for your blogs (assuming you have several websites), it's possible to put `wswsh` in your `PATH`,
-instead of having a "redundant" file, on every directory. If you do that, you need to modify the `Makefile`:
+instead of having a "redundant" file, on every directory.  
+If you do that, you need to modify the `Makefile`:
 
 ```make
 gen:
-@${SOFT} ${PWD}
+	@${SOFT} ${PWD}
 ```
+
+The default behavior allows you to modify `wswsh` for your websites. So, you can write custom modifications per sites.
 
 awk compatibility
 -----------------
