@@ -1,35 +1,29 @@
-# 2013 - wswsh - Ypnose - http://ypnose.org
 # Makefile for wswsh - see LICENSE for copyright and license
+# 2013, 2014 - Ypnose - http://ypnose.org
 
 SOFT = wswsh
-VERSION = 1.1
-PREFIX = ${HOME}/Repos/Wswsh
-DESTPREFIX = ${PREFIX}/dest
+DEST = ${PWD}/dest
 
-all: options gen
-
-options:
-	@echo ${SOFT} ${VERSION} build options:
-	@echo "PREFIX  = ${PREFIX}"
+all: gen
 
 wswsh.conf:
 	@echo creating config from wswsh.conf.default
 	@cp wswsh.conf.default $@
 
-clean: ${DESTPREFIX}
+clean: ${DEST}
 	@echo removing dest
-	@rm -r ${DESTPREFIX}
+	@rm -r ${DEST}
 
 gen:
-	@./wswsh ${PREFIX}
+	@./${SOFT} ${PWD}
 
 regen: clean gen
 
 generate: gen
 
-purge: wswsh.conf ${DESTPREFIX}
+purge: wswsh.conf ${DEST}
 	@echo purging the config and dest
 	@rm wswsh.conf
-	@rm -r ${DESTPREFIX}
+	@rm -r ${DEST}
 
-.PHONY: all options clean gen regen generate purge
+.PHONY: all clean gen regen generate purge
