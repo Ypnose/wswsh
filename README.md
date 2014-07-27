@@ -85,7 +85,7 @@ Note(s)
 -------
 
 If you use the same `wswsh` executable for your blogs (assuming you have several websites), it's possible to put `wswsh` in your `PATH`,
-instead of having a "redundant" file, on every directory.  
+instead of having a "redundant" file, in every directory.  
 If you do that, you need to modify the `Makefile`:
 
 ```make
