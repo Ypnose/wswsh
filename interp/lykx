@@ -1,0 +1,30 @@
+#!/usr/bin/mksh
+# Script by Ypnose - http://ypnose.org
+
+set -x
+RAC="$PWD"
+
+if [[ -z $1 ]]; then
+	print -u2 "FAUX!"
+	exit 1
+fi
+
+if [[ -r ${RAC}/includes/layout ]]; then
+	. "${RAC}/includes/layout"
+else
+	print -u2 "Layout not found!"
+	exit 1
+fi
+
+while IFS='|' read -r LINK TITLE TAG; do
+	print "\t<p><a href=\"${LINK##@}\">${TITLE}</a><p>"
+	if [[ -n $TAG ]]; then
+		for i in $TAG; do 
+			[[ ! -d dest/${i} ]] && mkdir "dest/${i}"
+			[[ ! -f dest/${i}/index.html ]] && page_head > "dest/${i}/index.html"
+			print "\t<p><a href=\"${LINK##@}\">${TITLE}</a><p>" >> "dest/${i}/index.html"
+		done
+	fi
+done <"$1"
+
+exit
