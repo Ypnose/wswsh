@@ -1,8 +1,31 @@
 #!/usr/bin/mksh
 # Script by Ypnose - http://ypnose.org
-
+# Not designed to be used.
 set -x
 RAC="$PWD"
+
+function format_h1 {
+	STRH="${LINE##*! }"
+	print "<h1>${STRH}</h1>"
+}
+
+function format_link {
+	typeset IFS
+	IFS='|'
+	#URL="${LINE##\@ }"
+	set -A OPT -- $LINE
+	print "<p><a href=\"${OPT[0]}\">${OPT[1]}</a></p>"
+	if [[ -n ${OPT[2]} ]]; then
+		# NOPE. DONT DO THAT!!
+		IFS=' '
+		for i in ${OPT[2]}; do
+			[[ ! -d dest/${i} ]] && mkdir "dest/${i}"
+			[[ ! -f dest/${i}/index.html ]] && page_head > "dest/${i}/index.html"
+			print "\t<p><a href=\"${OPT[0]}\">${OPT[1]}</a><p>" >> "dest/${i}/index.html"
+		done
+	fi
+	#print "${OPT[2]}"
+}
 
 if [[ -z $1 ]]; then
 	print -u2 "FAUX!"
@@ -16,15 +39,13 @@ else
 	exit 1
 fi
 
-while IFS='|' read -r LINK TITLE TAG; do
-	print "\t<p><a href=\"${LINK##@}\">${TITLE}</a><p>"
-	if [[ -n $TAG ]]; then
-		for i in $TAG; do 
-			[[ ! -d dest/${i} ]] && mkdir "dest/${i}"
-			[[ ! -f dest/${i}/index.html ]] && page_head > "dest/${i}/index.html"
-			print "\t<p><a href=\"${LINK##@}\">${TITLE}</a><p>" >> "dest/${i}/index.html"
-		done
-	fi
+while IFS=$'\n' read -r LINE; do
+	TYPE="${LINE::1}"
+	case $TYPE in
+		\#|\ ) continue ;;
+		\!) format_h1 ;;
+		\@) format_link ;;
+	esac
 done <"$1"
 
 exit
