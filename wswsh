@@ -136,7 +136,7 @@ function gen_page_skel {
 
 	cd ..
 	TOT=$(find "${RAC}/dest" -type f | wc -l)
-	print "Generated $TOT files."
+	print "Generated $TOT files\nDone"
 }
 
 if [[ -z $1 ]]; then
