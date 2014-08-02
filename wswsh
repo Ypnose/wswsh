@@ -61,8 +61,8 @@ function do_backup {
 function parse_file {
 	# We got the title from <h1> or #. Add what you want...
 	case $INTERP in
-		smu) ATIT="$(awk '/\#/{gsub(/^[\t ]+|#[\t ]+/,"");print $0;exit}' $LINE)";; # We can't use 'print " | "$0' because the variable is used two times.
-		*) ATIT="$(awk '/<h1>/{gsub(/^[\t ]+|<h1>|<\/h1>.*/,"");print $0;exit}' $LINE)";; # ^SAME
+		smu) ATIT="$(awk '/\#/{gsub(/^[\t ]+|#[\t ]+/,"");print $0;exit}' $FILE)";; # We can't use 'print " | "$0' because the variable is used two times.
+		*) ATIT="$(awk '/<h1>/{gsub(/^[\t ]+|<h1>|<\/h1>.*/,"");print $0;exit}' $FILE)";; # ^SAME
 	esac
 }
 
@@ -74,17 +74,17 @@ function gen_page_skel {
 	fi
 	print "Generating pages..."
 	cd "$RAC"
-	find "src" -type f -iname "*.${EXT:-txt}" | while IFS=$'\n' read -r LINE; do
-		FILENOSRC="${LINE#*/}"
+	find "src" -type f -iname "*.${EXT:-txt}" | while IFS=$'\n' read -r FILE; do
+		FILENOSRC="${FILE#*/}"
 		FILENOEXT="${FILENOSRC%%.*}"
 		FILEXPORT="dest/${FILENOEXT}.html"
 		parse_file
 		page_head > "$FILEXPORT"
-		"${INTERP:-cat}" "$LINE" >> "$FILEXPORT"
+		"${INTERP:-cat}" "$FILE" >> "$FILEXPORT"
 		page_foot >> "$FILEXPORT"
 		RET=$?
 		if (( RET != 0 )); then
-			print -u2 "Generating $LINE failed"
+			print -u2 "Generating $FILE failed"
 			exit 1
 		fi
 	done
@@ -100,11 +100,11 @@ function gen_page_skel {
 			awk '/<!--[\t ]*DATE/{gsub(/^[\t ]+|<!--[\t ]*DATE *: *|[\t ]*-->.*/,"");printf "%s",$0;exit}' $ART; \
 			print " $ART"; done | sort -nr | awk '{gsub(/201[2-8]-[0-1][0-9]-[0-3][0-9] /,"");print}')"
 		gen_site_xml > "$RSSF"
-		print "$SORD" | while IFS=$'\n' read -r LINE; do
+		print "$SORD" | while IFS=$'\n' read -r FILE; do
 			# Don't need to enable a specific hour, let's assume I wrote the pages at midnight.
-			RDADAT="$(awk '/<!--[\t ]*DATE/{gsub(/^[\t ]+|<!--[\t ]*DATE *: *|[\t ]*-->.*/,"");print $0"T00:00:00Z";exit}' $LINE)"
-			RSSDES="$(awk '/<!--[\t ]*DESC/{gsub(/^[\t ]+|<!--[\t ]*DESC *: *|[\t ]*-->.*/,"");print $0;exit}' $LINE)"
-			RSSTNOSRC="${LINE#*/}"
+			RDADAT="$(awk '/<!--[\t ]*DATE/{gsub(/^[\t ]+|<!--[\t ]*DATE *: *|[\t ]*-->.*/,"");print $0"T00:00:00Z";exit}' $FILE)"
+			RSSDES="$(awk '/<!--[\t ]*DESC/{gsub(/^[\t ]+|<!--[\t ]*DESC *: *|[\t ]*-->.*/,"");print $0;exit}' $FILE)"
+			RSSTNOSRC="${FILE#*/}"
 			RSSTNOEXT="${RSSTNOSRC%%.*}"
 			parse_file
 			xml_content >> "$RSSF"
