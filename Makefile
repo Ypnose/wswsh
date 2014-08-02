@@ -7,11 +7,11 @@ DEST = ${PWD}/dest
 all: gen
 
 wswsh.conf:
-	@echo creating config from wswsh.conf.default
+	@echo Creating config from wswsh.conf.default
 	@cp wswsh.conf.default $@
 
 clean: ${DEST}
-	@echo removing dest
+	@echo Removing dest
 	@rm -r ${DEST}
 
 gen:
@@ -22,7 +22,7 @@ regen: clean gen
 generate: gen
 
 purge: wswsh.conf ${DEST}
-	@echo purging the config and dest
+	@echo Purging the config and dest
 	@rm wswsh.conf
 	@rm -r ${DEST}
 
