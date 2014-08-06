@@ -7,9 +7,9 @@ It has many advantages:
   * Lightweight
   * Only requires a shell + UNIX utilities
   * Markdown / smu support
-  * Human readable configuration
+  * Easily "hackable" with external scripts / interpreters
   * Less than 140 LOC (without layouts)
-  * Easily "hackable"
+  * Human readable configuration
   * Atom 1.0 Feed support
 
 *You can read another howto with examples [here](http://blog.ypnose.org/2013/blogging-shell.html) (might be useful).*
@@ -112,4 +112,4 @@ Powering:
   * http://blog.ypnose.org
   * https://cosmofox.net/blog/
 
-If you use wswsh for your website, please contact me. I'll add your website in the README.
+If you decided to use wswsh for your website(s), please contact me. I'll add it in the README.
