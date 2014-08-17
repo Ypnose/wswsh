@@ -90,7 +90,7 @@ function gen_page_skel {
 	done
 
 	# RSS / Atom
-	if [[ -n $FEED && $FEED = @([Yy]es|YES) ]]; then
+	if [[ -n $FEED && $FEED = [Yy][Ee][Ss] ]]; then
 		[[ -n $ARTD && ! -d $ARTD ]] && print -u2 "The article directory is missing!" && exit 1
 		# XML date, emulates $(date --rfc-3339=seconds) from GNU date.
 		RDAT=$(LC_ALL=C date "+%Y-%m-%dT%H:%M:%SZ")
