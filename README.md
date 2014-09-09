@@ -6,7 +6,7 @@ It has many advantages:
 
   * Lightweight
   * Only requires a shell + UNIX utilities
-  * Markdown / smu support
+  * Markdown / [smu](https://github.com/Gottox/smu) support
   * Easily "hackable" with external scripts / interpreters
   * Less than 140 LOC (without layouts)
   * Human readable configuration
