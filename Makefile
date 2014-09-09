@@ -4,22 +4,18 @@
 SOFT = wswsh
 DEST = ${PWD}/dest
 
-all: gen
+all: clean gen
 
 wswsh.conf:
 	@echo Creating config from wswsh.conf.default
 	@cp wswsh.conf.default $@
 
-clean: ${DEST}
+clean:
 	@echo Removing dest
-	@rm -r ${DEST}
+	@rm -rf ${DEST}
 
 gen:
 	@./${SOFT} ${PWD}
-
-regen: clean gen
-
-generate: gen
 
 purge: wswsh.conf ${DEST}
 	@echo Purging the config and dest
