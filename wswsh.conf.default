@@ -10,6 +10,10 @@
 # Used inside the feed.
 #WURL=""
 
+# CSS style. Pretty obvious, right?
+# Write entire location from the src directory.
+#CSSF=""
+
 # Write the other interpreter (smu for example, tested with 2c7b9d2ec0 rev).
 # https://github.com/Gottox/smu
 # You can leave this option if you only concatenate files.
@@ -25,24 +29,25 @@
 # following extensions: txt,TXT,txT,TxT,tXt and so on.
 #EXT=""
 
-# CSS style. Pretty obvious, right?
-# Write entire location from the src directory.
-#CSSF=""
+# Enable source file copy.
+# The file in src/ used for the converting, will be copied to dest/
+# Valid values: 1. Disable it by commenting out the line.
+#COPY=""
 
 # Enable RSS/Atom feed.
 # Valid values: Yes, yes, YES. Disable it by commenting out the line, or write No.
 #FEED=""
+
+# Directory which contains the articles.
+# Those articles will appear in the feed
+# Default value: src/blog/
+#ARTD=""
 
 # Where to put the generated feed?
 # Write entire location from the src directory.
 # DON'T FORGET THE TRAILING SLASH!
 # Default value (when FEED is enabled): dest/
 #RSSDIR=""
-
-# Directory which contains the articles.
-# Those articles will appear in the feed
-# Default value: src/blog/
-#ARTD=""
 
 # Files not handled by the generation.
 # Useful for robots.txt files for example.
