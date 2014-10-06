@@ -6,7 +6,11 @@ function page_head {
 	<meta charset="utf-8" />
 	<meta name="author" content="John Foo" />'
 	(( CSSV == 1 )) && print "\t<link rel=\"stylesheet\" type=\"text/css\" href=\"/${CSSF}\" />"
-	[[ -n $WTIT ]] && print "\t<title>${WTIT}${ATIT:+ | }${ATIT}</title>"
+	if [[ -n $WTIT ]]; then
+		print "\t<title>${WTIT}${FILETIT:+ | }${FILETIT}</title>"
+	else
+		print "\t<title>${FILETIT}</title>"
+	fi
 	print '</head>
 <body>
 	<div>FOO</div>'
@@ -35,7 +39,7 @@ function gen_site_xml {
 
 function xml_content {
 	print '\t<entry>
-		<title>'"${ATIT}"'</title>
+		<title>'"${FILETIT}"'</title>
 		<link href="http://'${WURL}'/'${RSSTNOEXT}'.html"/>
 		<id>http://'"${WURL}"'/'"${RSSTNOEXT}"'.html</id>
 		<updated>'"${RDADAT}"'</updated>
