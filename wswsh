@@ -89,6 +89,7 @@ function gen_page_skel {
 			print -u2 "Generating $FILE failed"
 			exit 1
 		fi
+		(( COPY == 1 )) && cp "src/${FILENOSRC}" "dest/${FILENOSRC}"
 	done
 
 	# RSS / Atom
