@@ -35,7 +35,7 @@
 #COPY=""
 
 # Enable RSS/Atom feed.
-# Valid values: Yes, yes, YES. Disable it by commenting out the line, or write No.
+# Valid values: 1. Disable it by commenting out the line.
 #FEED=""
 
 # Directory which contains the articles.
