@@ -39,7 +39,6 @@ function get_structure {
 
 function parse_css_f {
 	if [[ -n $CSSF && -r ${RAC}/src/${CSSF} ]]; then
-		CSSV=1
 		print "Using custom CSS style"
 		cp "${RAC}/src/${CSSF}" "${RAC}/dest/${CSSF}"
 	fi
@@ -102,6 +101,10 @@ function gen_page_skel {
 		SORD="$(find "${ARTD:-src/blog/}" -mindepth 2 -type f -iname "*.${EXT:-txt}" | while IFS=$'\n' read -r ART; do \
 			awk '/<!--[\t ]*DATE/{gsub(/^[\t ]+|<!--[\t ]*DATE *: *|[\t ]*-->.*/,"");printf "%s",$0;exit}' $ART; \
 			print " $ART"; done | sort -nr | awk '{gsub(/201[2-8]-[0-1][0-9]-[0-3][0-9] /,"");print}')"
+		if [[ -z $SORD ]]; then
+			print -u2 "No articles found inside ${ARTD:-src/blog/}"
+			exit 1
+		fi
 		gen_site_xml > "$RSSF"
 		print "$SORD" | while IFS=$'\n' read -r FILE; do
 			# Don't need to enable a specific hour, let's assume I wrote the pages at midnight.
