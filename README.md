@@ -99,7 +99,7 @@ Why not provide a script sh compliant (or even bash)?
 -----------------------------------------------------
 
 Few months ago, I still wanted to write a `sh` compliant version but I decided to drop that idea. At the moment, we are less than
-5 people who use it. Creating a second version would be a waste of time, especially when the users already switched to `mksh`.
+5 people who use it. Creating a second version would be a waste of time, especially when the users already switched to `mksh`.  
 Maintaining two redundant versions isn't easy and I do not want to work for nothing. If you're still interested, you're free to
 adapt to `sh`. It shouldn't be complicated.
 
