@@ -82,12 +82,12 @@ function gen_page_skel {
 		FILETIT="$(pagetit "$FILE")"
 		page_head > "$FILEXPORT"
 		"${INTERP:-cat}" "$FILE" >> "$FILEXPORT"
-		page_foot >> "$FILEXPORT"
 		RET=$?
 		if (( RET != 0 )); then
 			print -u2 "Generating $FILE failed"
 			exit 1
 		fi
+		page_foot >> "$FILEXPORT"
 		(( COPY == 1 )) && cp "src/${FILENOSRC}" "dest/${FILENOSRC}"
 	done
 
