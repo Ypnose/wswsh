@@ -31,11 +31,11 @@
 
 # Enable source file copy.
 # The file in src/ used for the converting, will be copied to dest/
-# Valid values: 1. Disable it by commenting out the line.
+# Valid value: 1. Disable it by commenting out the line.
 #COPY=""
 
 # Enable RSS/Atom feed.
-# Valid values: 1. Disable it by commenting out the line.
+# Valid value: 1. Disable it by commenting out the line.
 #FEED=""
 
 # Directory which contains the articles.
