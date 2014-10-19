@@ -80,14 +80,14 @@ function gen_page_skel {
 		FILENOEXT="${FILENOSRC%%.*}"
 		FILEXPORT="dest/${FILENOEXT}.html"
 		FILETIT="$(pagetit "$FILE")"
-		page_head > "$FILEXPORT"
-		"${INTERP:-cat}" "$FILE" >> "$FILEXPORT"
+		page_head >"$FILEXPORT"
+		"${INTERP:-cat}" "$FILE" >>"$FILEXPORT"
 		RET=$?
 		if (( RET != 0 )); then
 			print -u2 "Generating $FILE failed"
 			exit 1
 		fi
-		page_foot >> "$FILEXPORT"
+		page_foot >>"$FILEXPORT"
 		(( COPY == 1 )) && cp "src/${FILENOSRC}" "dest/${FILENOSRC}"
 	done
 
@@ -105,7 +105,7 @@ function gen_page_skel {
 			print -u2 "No articles found inside ${ARTD:-src/blog/}"
 			exit 1
 		fi
-		gen_site_xml > "$RSSF"
+		gen_site_xml >"$RSSF"
 		print "$SORD" | while IFS=$'\n' read -r FILE; do
 			# Don't need to enable a specific hour, let's assume I wrote the pages at midnight.
 			RDADAT="$(awk '/<!--[\t ]*DATE/{gsub(/^[\t ]+|<!--[\t ]*DATE *: *|[\t ]*-->.*/,"");print $0"T00:00:00Z";exit}' $FILE)"
@@ -113,9 +113,9 @@ function gen_page_skel {
 			RSSTNOSRC="${FILE#*/}"
 			RSSTNOEXT="${RSSTNOSRC%%.*}"
 			FILETIT="$(pagetit "$FILE")"
-			xml_content >> "$RSSF"
+			xml_content >>"$RSSF"
 		done
-		print '</feed>' >> "$RSSF"
+		print '</feed>' >>"$RSSF"
 	fi
 
 	# We copy existing *.html files from src to dest.
