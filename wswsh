@@ -10,21 +10,18 @@ function parse_config {
 	if [[ -r ${RAC}/wswsh.conf && -r ${RAC}/includes/layout ]]; then
 		. "${RAC}/wswsh.conf" && . "${RAC}/includes/layout"
 	else
-		print -u2 "Missing configs / layout"
+		print -u2 "Missing wswsh.conf / layout"
 		exit 1
 	fi
 }
 
-function verify_dirs {
+function get_structure {
 	if [[ ! -d ${RAC}/src ]]; then
 		print -u2 "src doesn't exist"
 		exit 1
 	fi
 	[[ ! -d ${RAC}/dest ]] && mkdir "${RAC}/dest"
-}
 
-function get_structure {
-	verify_dirs
 	if [[ -n $(find "${RAC}/src" -type d -print) ]]; then
 		# The following line works with GNU find:
 		# find "${RAC}/src" -type d -printf "dest/%P\0" | xargs -0 mkdir -p
@@ -34,13 +31,6 @@ function get_structure {
 		cd ..
 	else
 		print "No directory found. Nothing to create"
-	fi
-}
-
-function parse_css_f {
-	if [[ -n $CSSF && -r ${RAC}/src/${CSSF} ]]; then
-		print "Using custom CSS style"
-		cp "${RAC}/src/${CSSF}" "${RAC}/dest/${CSSF}"
 	fi
 }
 
@@ -67,7 +57,10 @@ function get_interp {
 }
 
 function gen_page_skel {
-	parse_css_f
+	if [[ -n $CSSF && -r ${RAC}/src/${CSSF} ]]; then
+		cp "${RAC}/src/${CSSF}" "${RAC}/dest/${CSSF}"
+	fi
+
 	if [[ -n $INTERP && -z $(whence $INTERP) ]]; then
 		print -u2 "$INTERP not found"
 		exit 1
@@ -106,7 +99,7 @@ function gen_page_skel {
 			exit 1
 		fi
 		gen_site_xml >"$RSSF"
-		print "$SORD" | while IFS=$'\n' read -r FILE; do
+		print -- "$SORD" | while IFS=$'\n' read -r FILE; do
 			# Don't need to enable a specific hour, let's assume I wrote the pages at midnight.
 			RDADAT="$(awk '/<!--[\t ]*DATE/{gsub(/^[\t ]+|<!--[\t ]*DATE *: *|[\t ]*-->.*/,"");print $0"T00:00:00Z";exit}' $FILE)"
 			RSSDES="$(awk '/<!--[\t ]*DESC/{gsub(/^[\t ]+|<!--[\t ]*DESC *: *|[\t ]*-->.*/,"");print $0;exit}' $FILE)"
@@ -131,7 +124,7 @@ function gen_page_skel {
 	if [[ -n $FIL ]]; then
 		for y in $FIL; do
 			if [[ -z $(find "src" -type f -name "$y") ]]; then
-				print "$y is missing"
+				print -- "$y is missing"
 				continue
 			fi
 			find "src" -type f -name "$y" | while IFS=$'\n' read -r LINEF; do
@@ -142,7 +135,7 @@ function gen_page_skel {
 
 	cd ..
 	TOT=$(find "${RAC}/dest" -type f | wc -l)
-	print "Generated $TOT files\nDone"
+	print "Generated $TOT files"
 }
 
 if [[ -z $1 ]]; then
