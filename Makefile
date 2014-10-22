@@ -22,4 +22,4 @@ purge: wswsh.conf ${DEST}
 	@rm wswsh.conf
 	@rm -r ${DEST}
 
-.PHONY: all clean gen regen generate purge
+.PHONY: all clean gen purge
