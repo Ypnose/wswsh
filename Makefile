@@ -1,5 +1,5 @@
 # Makefile for wswsh - see LICENSE for copyright and license
-# 2013, 2014 - Ypnose - http://ypnose.org
+# Ypnose - http://ypnose.org
 
 SOFT = wswsh
 DEST = ${PWD}/dest
