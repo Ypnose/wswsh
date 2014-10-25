@@ -1,7 +1,8 @@
 wswsh - [w]eb [s]ucks [w]ithout [sh]ell
 ---------------------------------------
 
-wswsh is a static website script using shell. It means [w]eb [s]ucks [w]ithout [sh]ell. Simple name for a simple script.
+wswsh is a static website script using shell. It means [w]eb [s]ucks
+[w]ithout [sh]ell. Simple name for a simple script.
 It has many advantages:
 
   * Lightweight
@@ -24,9 +25,11 @@ Create a directory including the following files:
 	wswsh
 	wswsh.conf.default
 
-You'll need a config file. Run `make wswsh.conf`. Edit it according to your needs. The comments explain almost everything.  
+You'll need a config file. Run `make wswsh.conf`. Edit it according to
+your needs. The comments explain almost everything.  
 
-A typical hierarchy contains a `src` directory, with your website inside it.
+A typical hierarchy contains a `src` directory, with your website inside
+it.
 
 	.
 	├── includes
@@ -46,11 +49,15 @@ A typical hierarchy contains a `src` directory, with your website inside it.
 	└── wswsh.conf
 
 Each folder in `src` will be reproduced in a new directory called `dest`.
-*wswsh* supports [smu](https://github.com/Gottox/smu) with revision `2c7b9d2ec0`. If you write your posts in markdown, you should use smu + `.md`, `.markdown` or `.txt` extensions.
-By default, there is no interpreter, only `cat` is used. It involves posts written in HTML.
+*wswsh* supports [smu](https://github.com/Gottox/smu) with revision
+`2c7b9d2ec0`. If you write your posts in markdown, you should use smu +
+`.md`, `.markdown` or `.txt` extensions.
+By default, there is no interpreter, only `cat` is used. It involves
+posts written in HTML.
 
-When you're ready, launch `make gen` (or `make regen` if you did it already). `make regen` deletes an existing `dest` folder.  
-Using the previous example, we now have:
+When you're ready, launch `make gen` (or `make regen` if you did it
+already). `make regen` deletes an existing `dest` folder. Using the
+previous example, we now have:
 
 	.
 	├── includes
@@ -84,40 +91,56 @@ Using the previous example, we now have:
 Note(s)
 -------
 
-If you use the same `wswsh` executable for your blogs (assuming you have several websites), it's possible to put `wswsh` in your `PATH`,
-instead of having a "redundant" file, in every directory.  
-If you do that, you need to modify the `Makefile`:
+If you use the same `wswsh` executable for your blogs (assuming you have
+several websites), it's possible to put `wswsh` in your `PATH`, instead
+of having a "redundant" file, in every directory.  
+If you do that, you have to modify the `Makefile`:
 
 ```make
 gen:
 	@${SOFT} ${PWD}
 ```
 
-The default behavior allows you to modify `wswsh` for your websites. So, you can write custom modifications per sites.
+The default behavior allows you to modify `wswsh` for your websites. So,
+you can write custom modifications per sites.
+
+An "interpreter" can be still used if it's ouside your `PATH`. Write the
+full path to the executable, within `wswsh.conf`:
+
+	INTERP="/home/foo/my_exec"
 
 Why not provide a script sh compliant (or even bash)?
 -----------------------------------------------------
 
-Few months ago, I still wanted to write a `sh` compliant version but I decided to drop that idea. At the moment, we are less than
-5 people who use it. Creating a second version would be a waste of time, especially when the users already switched to `mksh`.  
-Maintaining two redundant versions isn't easy and I do not want to work for nothing. If you're still interested, you're free to
-adapt to `sh`. It shouldn't be complicated.
+Few months ago, I still wanted to write a `sh` compliant version but I
+decided to drop that idea. At the moment, we are less than 5 people who
+use it. Creating a second version would be a waste of time, especially
+when the users already switched to `mksh`.  
+Maintaining two redundant versions isn't easy and I do not want to work
+for nothing. If you're still interested, you're free to adapt to `sh`.
+It shouldn't be complicated.
 
-awk compatibility
------------------
+`awk` compatibility
+-------------------
 
-When I added awk regexes, one of my goal was to support `nawk`, `mawk` and `gawk`. `gawk` is very common
-among Linux distributions, so I didn't have the choice. The regexes were "created" on `mawk`. I tested
-the compatibility and it worked flawlessly with the required implementations.  
-So, you can gain some precious seconds if you're brave enough to use `nawk` or `mawk`.
+When I added awk regexes, one of my goal was to support `nawk`, `mawk`
+and `gawk`. `gawk` is very common among Linux distributions, so I didn't
+have the choice. The regexes were "created" on `mawk`. I tested the
+compatibility and it worked flawlessly with the required implementations.  
+So, you can gain some precious seconds if you're brave enough to use
+`nawk` or `mawk`.
 
 Copyright
 ---------
 
-Code created by Ypnose, under BSD (3-Clause) License. You could send me fresh beers.
+Code created by Ypnose, under BSD (3-Clause) License.
+
+Website(s)
+----------
 
 Powering:
   * http://blog.ypnose.org
   * https://cosmofox.net/blog/
 
-If you decided to use wswsh for your website(s), please contact me. I'll add it in the README.
+If you decided to use wswsh for your website(s), please contact me. I'll
+add it in the README.
