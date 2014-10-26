@@ -59,6 +59,7 @@ function get_interp {
 
 function gen_page_skel {
 	if [[ -n $CSSF && -r ${RAC}/src/${CSSF} ]]; then
+		CSSV=1
 		cp "${RAC}/src/${CSSF}" "${RAC}/dest/${CSSF}"
 	fi
 
