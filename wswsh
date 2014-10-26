@@ -52,6 +52,7 @@ function get_interp {
 	case $INTERP in
 		# We can't use 'print " | "$0' because the function is used two times.
 		smu) function pagetit { awk '/\#/{gsub(/^[\t ]+|#[\t ]+/,"");print $0;exit}' "$1"; };;
+		ahrf.awk) function pagetit { awk '/:\ /{gsub(/:\ |\ :/,"");print $0;exit}' "$1"; };;
 		*) function pagetit { awk '/<h1>/{gsub(/^[\t ]+|<h1>|<\/h1>.*/,"");print $0;exit}' "$1"; };;
 	esac
 }
