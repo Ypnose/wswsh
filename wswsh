@@ -1,5 +1,5 @@
 #!/usr/bin/mksh
-# 2013-2014 - wswsh - Ypnose - http://ypnose.org
+# wswsh - Ypnose - http://ypnose.org
 # Copyright (c) 2013-2014, Ypnose - All rights reserved.
 # This project is under BSD (3-Clause) License
 # See LICENSE for license details.
@@ -58,6 +58,8 @@ function get_interp {
 
 function gen_page_skel {
 	if [[ -n $CSSF && -r ${RAC}/src/${CSSF} ]]; then
+		# Launch layout custom stylesheet
+		CSSV=1
 		cp "${RAC}/src/${CSSF}" "${RAC}/dest/${CSSF}"
 	fi
 
