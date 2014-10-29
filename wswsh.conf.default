@@ -53,7 +53,3 @@
 # Useful for robots.txt files for example.
 # Separate filename with spaces.
 #FIL=""
-
-# Enable src backup.
-# Write entire location from root filesystem. The directory must exist.
-#BACKUP=""
