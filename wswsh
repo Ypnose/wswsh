@@ -34,19 +34,6 @@ function get_structure {
 	fi
 }
 
-function do_backup {
-	if [[ -n $BACKUP ]]; then
-		if [[ -d $BACKUP ]]; then
-			WHEN="$(date "+%Y-%m-%d")"
-			rm -R "${BACKUP}/src_"* && cp -R "${RAC}/src" "${BACKUP}/src_${WHEN}"
-			rm -R "${BACKUP}/includes_"* && cp -R "${RAC}/includes" "${BACKUP}/includes_${WHEN}"
-			cp "${RAC}/wswsh" "${BACKUP}/wswsh" && cp "${RAC}/wswsh.conf" "${BACKUP}/wswsh.conf"
-		else
-			print -u2 "Directory doesn't exist!"
-		fi
-	fi
-}
-
 function get_interp {
 	# We got the title from <h1> or # (for markdown). Add what you want...
 	case $INTERP in
@@ -146,7 +133,6 @@ if [[ -z $1 ]]; then
 fi
 
 parse_config
-#do_backup
 get_structure
 gen_page_skel
 
