@@ -6,19 +6,22 @@
 #set -x
 RAC="$1"
 
+function prynt_err {
+	print -u2 "$@"
+	exit 1
+}
+
 function parse_config {
 	if [[ -r ${RAC}/wswsh.conf && -r ${RAC}/includes/layout ]]; then
 		. "${RAC}/wswsh.conf" && . "${RAC}/includes/layout"
 	else
-		print -u2 "Missing wswsh.conf / layout"
-		exit 1
+		prynt_err "Missing wswsh.conf / layout"
 	fi
 }
 
 function get_structure {
 	if [[ ! -d ${RAC}/src ]]; then
-		print -u2 "src doesn't exist"
-		exit 1
+		prynt_err "src doesn't exist"
 	fi
 	[[ ! -d ${RAC}/dest ]] && mkdir "${RAC}/dest"
 
@@ -35,7 +38,6 @@ function get_structure {
 }
 
 function get_interp {
-	# We got the title from <h1> or # (for markdown). Add what you want...
 	case $INTERP in
 		# We can't use 'print " | "$0' because the function is used two times.
 		smu) function pagetit { awk '/\#/{gsub(/^[\t ]+|#[\t ]+/,"");print $0;exit}' "$1"; };;
@@ -51,8 +53,7 @@ function gen_page_skel {
 	fi
 
 	if [[ -n $INTERP && -z $(whence $INTERP) ]]; then
-		print -u2 "$INTERP not found"
-		exit 1
+		prynt_err "$INTERP not found"
 	fi
 	print "Generating pages..."
 	get_interp
@@ -66,8 +67,7 @@ function gen_page_skel {
 		"${INTERP:-cat}" "$FILE" >>"$FILEXPORT"
 		RET=$?
 		if (( RET != 0 )); then
-			print -u2 "Generating $FILE failed"
-			exit 1
+			prynt_err "Generating $FILE failed"
 		fi
 		page_foot >>"$FILEXPORT"
 		(( COPY == 1 )) && cp "src/${FILENOSRC}" "dest/${FILENOSRC}"
@@ -75,7 +75,7 @@ function gen_page_skel {
 
 	# RSS / Atom
 	if [[ -n $FEED ]] && (( FEED == 1 )); then
-		[[ -n $ARTD && ! -d $ARTD ]] && print -u2 "The article directory is missing!" && exit 1
+		[[ -n $ARTD && ! -d $ARTD ]] && prynt_err "The article directory is missing!"
 		# XML date, emulates $(date --rfc-3339=seconds) from GNU date.
 		RDAT=$(LC_ALL=C date "+%Y-%m-%dT%H:%M:%SZ")
 		RSSF="dest/${RSSDIR}atom.xml"
@@ -84,8 +84,7 @@ function gen_page_skel {
 			awk '/<!--[\t ]*DATE/{gsub(/^[\t ]+|<!--[\t ]*DATE *: *|[\t ]*-->.*/,"");printf "%s",$0;exit}' $ART; \
 			print " $ART"; done | sort -nr | awk '{gsub(/201[2-8]-[0-1][0-9]-[0-3][0-9] /,"");print}')"
 		if [[ -z $SORD ]]; then
-			print -u2 "No articles found inside ${ARTD:-src/blog/}"
-			exit 1
+			prynt_err "No articles found inside ${ARTD:-src/blog/}"
 		fi
 		gen_site_xml >"$RSSF"
 		print -- "$SORD" | while IFS=$'\n' read -r FILE; do
@@ -128,8 +127,7 @@ function gen_page_skel {
 }
 
 if [[ -z $1 ]]; then
-	print -u2 "usage: wswsh [website_root]"
-	exit 1
+	prynt_err "usage: wswsh [website_root]"
 fi
 
 parse_config
