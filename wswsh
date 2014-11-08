@@ -45,7 +45,7 @@ function get_interp {
 	esac
 }
 
-function gen_page_skel {
+function gen_page {
 	if [[ -n $CSSF && -r ${RAC}/src/${CSSF} ]]; then
 		# Launch layout custom stylesheet
 		CSSV=1
@@ -132,6 +132,6 @@ fi
 
 parse_config
 get_structure
-gen_page_skel
+gen_page
 
 exit
