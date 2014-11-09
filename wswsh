@@ -81,7 +81,7 @@ function gen_page {
 		RSSF="dest/${RSSDIR}atom.xml"
 		# Tip: date format -> year-month-day
 		SORD="$(find "${ARTD:-src/blog/}" -mindepth 2 -type f -iname "*.${EXT:-txt}" | while IFS=$'\n' read -r ART; do \
-			awk '/<!--[\t ]*DATE/{gsub(/^[\t ]+|<!--[\t ]*DATE *: *|[\t ]*-->.*/,"");printf "%s",$0;exit}' $ART; \
+			awk '/<!--[\t ]*DATE/{gsub(/^[\t ]*<!--[\t ]*DATE *: *|[\t ]*-->.*/,"");printf "%s",$0;exit}' $ART; \
 			print " $ART"; done | sort -nr | awk '{gsub(/201[2-8]-[0-1][0-9]-[0-3][0-9] /,"");print}')"
 		if [[ -z $SORD ]]; then
 			prynt_err "No articles found inside ${ARTD:-src/blog/}"
@@ -89,8 +89,8 @@ function gen_page {
 		gen_site_xml >"$RSSF"
 		print -- "$SORD" | while IFS=$'\n' read -r FILE; do
 			# Don't need to enable a specific hour, let's assume I wrote the pages at midnight.
-			RDADAT="$(awk '/<!--[\t ]*DATE/{gsub(/^[\t ]+|<!--[\t ]*DATE *: *|[\t ]*-->.*/,"");print $0"T00:00:00Z";exit}' $FILE)"
-			RSSDES="$(awk '/<!--[\t ]*DESC/{gsub(/^[\t ]+|<!--[\t ]*DESC *: *|[\t ]*-->.*/,"");print $0;exit}' $FILE)"
+			RDADAT="$(awk '/<!--[\t ]*DATE/{gsub(/^[\t ]*<!--[\t ]*DATE *: *|[\t ]*-->.*/,"");print $0"T00:00:00Z";exit}' $FILE)"
+			RSSDES="$(awk '/<!--[\t ]*DESC/{gsub(/^[\t ]*<!--[\t ]*DESC *: *|[\t ]*-->.*/,"");print $0;exit}' $FILE)"
 			RSSTNOSRC="${FILE#*/}"
 			RSSTNOEXT="${RSSTNOSRC%%.*}"
 			FILETIT="$(pagetit "$FILE")"
