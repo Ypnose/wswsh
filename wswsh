@@ -105,7 +105,7 @@ function gen_page {
 			print "dest/${LINEH#*/} already exists"
 			continue
 		fi
-		cp "$LINEH" "dest/${LINEH#*/}"
+		cp -- "$LINEH" "dest/${LINEH#*/}"
 	done
 
 	# Test if the file exists. Then find it/them and copy it/them to dest (supports multiple files with same name).
