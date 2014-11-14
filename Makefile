@@ -2,24 +2,24 @@
 # Ypnose - http://ypnose.org
 
 SOFT = wswsh
-DEST = ${PWD}/dest
+DEST = $${PWD}/dest
 
 all: clean gen
-
-wswsh.conf:
-	@echo Creating config from wswsh.conf.default
-	@cp wswsh.conf.default $@
 
 clean:
 	@echo Removing dest
 	@rm -rf ${DEST}
 
 gen:
-	@./${SOFT} ${PWD}
+	@./${SOFT} $${PWD}
 
 purge: wswsh.conf ${DEST}
 	@echo Purging the config and dest
-	@rm wswsh.conf
+	@rm $<
 	@rm -r ${DEST}
+
+wswsh.conf: wswsh.conf.default
+	@echo Creating config from $<
+	@cp $< $@
 
 .PHONY: all clean gen purge
