@@ -75,7 +75,7 @@ function gen_page {
 	done
 
 	# RSS / Atom
-	if [[ -n $FEED ]] && (( FEED == 1 )); then
+	if (( FEED == 1 )); then
 		[[ -n $ARTD && ! -d $ARTD ]] && prynt_err "The article directory is missing!"
 		# XML date, emulates $(date --rfc-3339=seconds) from GNU date.
 		RDAT=$(LC_ALL=C date "+%Y-%m-%dT%H:%M:%SZ")
