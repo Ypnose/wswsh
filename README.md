@@ -13,7 +13,7 @@ It has many advantages:
   * Human readable configuration
   * Atom 1.0 Feed support
 
-*You can read another howto with examples [here](http://blog.ypnose.org/2013/blogging-shell.html) (might be useful).*
+*You can read another howto with examples [here](http://blog.ywstd.fr/2013/blogging-shell.html) (might be useful).*
 
 How to use it?
 --------------
@@ -139,7 +139,7 @@ Website(s)
 ----------
 
 Powering:
-  * http://blog.ypnose.org
+  * http://blog.ywstd.fr
   * https://cosmofox.net/blog/
 
 If you decided to use wswsh for your website(s), please contact me. I'll
