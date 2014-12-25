@@ -53,7 +53,7 @@ function gen_page {
 		cp "${RAC}/src/${CSSF}" "${RAC}/dest/${CSSF}"
 	fi
 
-	if [[ -n $INTERP && -z $(whence $INTERP) ]]; then
+	if [[ -n $INTERP && -z $(whence -p $INTERP) ]]; then
 		prynt_err "$INTERP not found"
 	fi
 	print "Generating pages..."
