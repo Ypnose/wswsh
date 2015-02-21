@@ -1,6 +1,6 @@
 #!/usr/bin/mksh
-# wswsh - Ypnose - http://ywstd.fr
-# Copyright (c) 2013-2014, Ypnose - All rights reserved.
+# Ypnose - http://ywstd.fr
+# Copyright (c) 2013-2015, Ypnose - All rights reserved.
 # This project is under BSD (3-Clause) License
 # See LICENSE for license details.
 #set -x
@@ -128,7 +128,8 @@ function gen_page {
 }
 
 if [[ -z $1 ]]; then
-	prynt_err "usage: wswsh [website_root]"
+	print "usage: ${0##*/} [website_root]"
+	exit
 fi
 
 parse_config
