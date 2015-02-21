@@ -7,7 +7,7 @@
 RAC="$1"
 
 function prynt_err {
-	print -u2 "$@"
+	print -u2 "ERR: $@"
 	exit 1
 }
 
