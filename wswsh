@@ -89,8 +89,8 @@ function gen_page {
 		fi
 		gen_site_xml >"$RSSF"
 		print -- "$SORD" | while IFS=$'\n' read -r FILE; do
-			# Don't need to enable a specific hour, let's assume I wrote the pages at midnight.
-			RDADAT="$(awk '/<!--[\t ]*DATE/{gsub(/^[\t ]*<!--[\t ]*DATE *: *|[\t ]*-->.*/,"");print $0"T00:00:00Z";exit}' $FILE)"
+			# Don't need to enable a specific hour, let's assume I wrote the pages at midday.
+			RDADAT="$(awk '/<!--[\t ]*DATE/{gsub(/^[\t ]*<!--[\t ]*DATE *: *|[\t ]*-->.*/,"");print $0"T12:00:00Z";exit}' $FILE)"
 			RSSDES="$(awk '/<!--[\t ]*DESC/{gsub(/^[\t ]*<!--[\t ]*DESC *: *|[\t ]*-->.*/,"");print $0;exit}' $FILE)"
 			RSSTNOSRC="${FILE#*/}"
 			RSSTNOEXT="${RSSTNOSRC%%.*}"
