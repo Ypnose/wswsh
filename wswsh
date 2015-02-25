@@ -109,19 +109,6 @@ function gen_page {
 		cp -- "$LINEH" "dest/${LINEH#*/}"
 	done
 
-	# Test if the file exists. Then find it/them and copy it/them to dest (supports multiple files with same name).
-	if [[ -n $FIL ]]; then
-		for y in $FIL; do
-			if [[ -z $(find "src" -type f -name "$y") ]]; then
-				print -- "$y is missing"
-				continue
-			fi
-			find "src" -type f -name "$y" | while IFS=$'\n' read -r LINEF; do
-				cp "src/${LINEF#*/}" "dest/${LINEF#*/}"
-			done
-		done
-	fi
-
 	cd ..
 	TOT=$(find "${RAC}/dest" -type f | wc -l)
 	print "Generated $TOT files"

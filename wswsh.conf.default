@@ -48,8 +48,3 @@
 # DON'T FORGET THE TRAILING SLASH!
 # Default value (when FEED is enabled): dest/
 #RSSDIR=""
-
-# Files not handled by the generation.
-# Useful for robots.txt files for example.
-# Separate filename with spaces.
-#FIL=""
