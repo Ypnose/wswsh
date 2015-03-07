@@ -7,7 +7,7 @@ It has many advantages:
 
   * Lightweight
   * Only requires a shell + UNIX utilities
-  * Designed to work with [ahrf](https://github.com/Ypnose/ahrf)
+  * Compatible with [ahrf](https://github.com/Ypnose/ahrf)
   * Markdown / [smu](https://github.com/Gottox/smu) support
   * Easily "hackable" with external scripts / interpreters
   * Less than 140 LOC (without layouts)
