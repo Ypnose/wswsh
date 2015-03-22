@@ -13,10 +13,9 @@ clean:
 gen:
 	@./${SOFT} $${PWD}
 
-purge: wswsh.conf ${DEST}
-	@echo Purging the config and dest
-	@rm wswsh.conf
-	@rm -r ${DEST}
+purge: clean
+	@echo Purging the config
+	@rm -f wswsh.conf
 
 wswsh.conf: wswsh.conf.default
 	@echo Creating config from wswsh.conf.default
