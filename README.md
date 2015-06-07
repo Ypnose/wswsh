@@ -142,6 +142,7 @@ Website(s)
 Powering:
   * http://blog.ywstd.fr
   * https://cosmofox.net/blog/
+  * http://savoirvivre.intraaktion.de
 
 If you decided to use wswsh for your website(s), please contact me. I'll
 add it in the README.
