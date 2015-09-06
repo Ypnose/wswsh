@@ -1,9 +1,7 @@
 #!/usr/bin/mksh
 # Ypnose - http://ywstd.fr
-# Copyright (c) 2013-2015, Ypnose - All rights reserved.
-# This project is under BSD (3-Clause) License
 # See LICENSE for license details.
-#set -x
+
 RAC="$1"
 
 function prynt_err {
@@ -64,6 +62,7 @@ function gen_page {
 		FILENOEXT="${FILENOSRC%%.*}"
 		FILEXPORT="dest/${FILENOEXT}.html"
 		FILETIT="$(pagetit "$FILE")"
+
 		page_head >"$FILEXPORT"
 		"${INTERP:-cat}" "$FILE" >>"$FILEXPORT"
 		RET=$?
@@ -84,6 +83,7 @@ function gen_page {
 		SORD="$(find "${ARTD:-src/blog/}" -mindepth 2 -type f -iname "*.${EXT:-txt}" | while IFS=$'\n' read -r ART; do \
 			awk '/<!--[\t ]*DATE/{gsub(/^[\t ]*<!--[\t ]*DATE *: *|[\t ]*-->.*/,"");printf "%s",$0;exit}' $ART; \
 			print " $ART"; done | sort -nr | awk '{gsub(/201[2-8]-[0-1][0-9]-[0-3][0-9] /,"");print}')"
+
 		if [[ -z $SORD ]]; then
 			prynt_err "No articles found inside ${ARTD:-src/blog/}"
 		fi
@@ -95,6 +95,7 @@ function gen_page {
 			RSSTNOSRC="${FILE#*/}"
 			RSSTNOEXT="${RSSTNOSRC%%.*}"
 			FILETIT="$(pagetit "$FILE")"
+
 			xml_content >>"$RSSF"
 		done
 		print '</feed>' >>"$RSSF"
