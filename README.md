@@ -8,7 +8,6 @@ It has many advantages:
   * Lightweight
   * Only requires a shell + UNIX utilities
   * Compatible with [ahrf](https://github.com/Ypnose/ahrf)
-  * Markdown-like syntax with [smu](https://github.com/Gottox/smu)
   * Easily "hackable" with external scripts / interpreters
   * Less than 140 LOC (without external layouts)
   * Human readable configuration
@@ -51,8 +50,7 @@ it.
 	└── wswsh.conf
 
 Each folder in `src` will be reproduced in a new directory called `dest`.
-**wswsh** also supports [smu](https://github.com/Gottox/smu) with
-revision `2c7b9d2ec0`.
+**wswsh** also supports [ahrf](https://github.com/Ypnose/ahrf).
 There is no default interpreter, only `cat` is called. It involves posts
 written in HTML.
 
