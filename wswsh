@@ -1,127 +1,107 @@
 #!/usr/bin/mksh
-# Ypnose - http://ywstd.fr
-# See LICENSE for license details.
+# Script by Ypnose - http://ywstd.fr
 
-RAC="$1"
+WSH_RAC="$1"
 
 function prynt_err {
-	print -u2 "ERR:" "$@"
+	print -u2 "ERR:" "$1"
 	exit 1
 }
 
 function parse_config {
-	if [[ -r ${RAC}/wswsh.conf && -r ${RAC}/includes/layout ]]; then
-		. "${RAC}/wswsh.conf" && . "${RAC}/includes/layout"
+	if [[ -r ${WSH_RAC}/wswsh.conf ]]; then
+		. "${WSH_RAC}/wswsh.conf"
 	else
-		prynt_err "Missing wswsh.conf / layout"
+		prynt_err "Missing wswsh.conf in $WSH_RAC"
+	fi
+
+	if [[ -d ${WSH_RAC}/includes ]]; then
+		. "${WSH_RAC}/includes/"*
 	fi
 }
 
 function get_structure {
-	if [[ ! -d ${RAC}/src ]]; then
+	typeset WSH_SDIR
+
+	if [[ ! -d ${WSH_RAC}/src ]]; then
 		prynt_err "src doesn't exist"
 	fi
-	[[ ! -d ${RAC}/dest ]] && mkdir "${RAC}/dest"
+	mkdir -p "${WSH_RAC}/dest"
 
-	if [[ -n $(find "${RAC}/src" -type d -print) ]]; then
-		# The following line works with GNU find:
-		# find "${RAC}/src" -type d -printf "dest/%P\0" | xargs -0 mkdir -p
-		# I finally decided to write lines "compatible" with {Mir,Open}BSD. Here we go:
-		cd "${RAC}/dest"
-		( cd ../src; find . -type d -print0 ) | xargs -0 mkdir -p
-		cd ..
-	else
-		print "No directory found. Nothing to create"
-	fi
+	# Create src/ hierarchy in dest/
+	( cd "${WSH_RAC}/src"; find . -type d ) | while IFS=$'\n' read -r WSH_SDIR; do
+		mkdir -p "${WSH_RAC}/dest/${WSH_SDIR#*/}"
+	done
 }
 
-function get_interp {
-	case $INTERP in
-		# We can't use 'print " | "$0' because the function is used two times.
-		ahrf*) function pagetit { awk '/^[\t ]*:/{gsub(/^[\t ]*:[\t ]*|[\t ]*:[\t ]*$/,"");print $0;exit}' "$1"; };;
-		smu) function pagetit { awk '/\#/{gsub(/^[\t ]*#[\t ]*/,"");print $0;exit}' "$1"; };;
-		*) function pagetit { awk '/<h1>/{gsub(/^[\t ]*<h1>[\t ]*|[\t ]*<\/h1>.*/,"");print $0;exit}' "$1"; };;
+function def_regex {
+	# Extensible part...
+	case $WSH_INTERP in
+		ahrf*)
+			WSH_PAT="^[\t ]*:"
+			WSH_REG="^[\t ]*:[\t ]*|[\t ]*:[\t ]*$"
+			;;
+		*)
+			WSH_PAT="<h1>"
+			WSH_REG="^[\t ]*<h1>[\t ]*|[\t ]*<\/h1>.*$"
+			;;
 	esac
 }
 
 function gen_page {
-	if [[ -n $CSSF && -r ${RAC}/src/${CSSF} ]]; then
-		# Launch layout custom stylesheet
-		CSSV=1
-		cp "${RAC}/src/${CSSF}" "${RAC}/dest/${CSSF}"
+	typeset WSH_GENF
+
+	if [[ -n $WSH_INTERP && ! -x $(whence -p $WSH_INTERP) ]]; then
+		prynt_err "$WSH_INTERP not found"
 	fi
 
-	if [[ -n $INTERP && -z $(whence -p $INTERP) ]]; then
-		prynt_err "$INTERP not found"
+	if [[ -n $WSH_CSSF && -r ${WSH_RAC}/src/${WSH_CSSF} ]]; then
+		WSH_CSS="1"
+		cp "${WSH_RAC}/src/${WSH_CSSF}" "${WSH_RAC}/dest/${WSH_CSSF}"
 	fi
-	print "Generating pages..."
-	get_interp
-	cd "$RAC"
-	find "src" -type f -iname "*.${EXT:-txt}" | while IFS=$'\n' read -r FILE; do
-		FILENOSRC="${FILE#*/}"
-		FILENOEXT="${FILENOSRC%%.*}"
-		FILEXPORT="dest/${FILENOEXT}.html"
-		FILETIT="$(pagetit "$FILE")"
+
+	# Define the regexes
+	def_regex
+
+	cd "$WSH_RAC"
+	find "src" -type f -iname "*.${WSH_EXT:-txt}" | while IFS=$'\n' read -r WSH_GENF; do
+		FILENOSRC="${WSH_GENF#*/}"
+		FILEXPORT="dest/${FILENOSRC%%.*}.html"
+		FILETIT="$(awk '/'"$WSH_PAT"'/{gsub(/'"$WSH_REG"'/,"");print $0;exit}' "$WSH_GENF")"
 
 		page_head >"$FILEXPORT"
-		"${INTERP:-cat}" "$FILE" >>"$FILEXPORT"
-		RET=$?
-		if (( RET != 0 )); then
-			prynt_err "Generating $FILE failed"
+		if ! "${WSH_INTERP:-cat}" "$WSH_GENF" >>"$FILEXPORT"; then
+			prynt_err "Generating $WSH_GENF failed"
 		fi
 		page_foot >>"$FILEXPORT"
-		(( COPY == 1 )) && cp "src/${FILENOSRC}" "dest/${FILENOSRC}"
+		(( WSH_COPY == 1 )) && cp "src/${FILENOSRC}" "dest/${FILENOSRC}"
 	done
-
-	# RSS / Atom
-	if (( FEED == 1 )); then
-		[[ -n $ARTD && ! -d $ARTD ]] && prynt_err "The article directory is missing!"
-		# XML date, emulates $(date --rfc-3339=seconds) from GNU date.
-		RDAT=$(LC_ALL=C date "+%Y-%m-%dT%H:%M:%SZ")
-		RSSF="dest/${RSSDIR}atom.xml"
-		# Tip: date format -> year-month-day
-		SORD="$(find "${ARTD:-src/blog/}" -mindepth 2 -type f -iname "*.${EXT:-txt}" | while IFS=$'\n' read -r ART; do \
-			awk '/<!--[\t ]*DATE/{gsub(/^[\t ]*<!--[\t ]*DATE *: *|[\t ]*-->.*/,"");printf "%s",$0;exit}' $ART; \
-			print " $ART"; done | sort -nr | awk '{gsub(/201[2-8]-[0-1][0-9]-[0-3][0-9] /,"");print}')"
-
-		if [[ -z $SORD ]]; then
-			prynt_err "No articles found inside ${ARTD:-src/blog/}"
-		fi
-		gen_site_xml >"$RSSF"
-		print -- "$SORD" | while IFS=$'\n' read -r FILE; do
-			# Don't need to enable a specific hour, let's assume I wrote the pages at midday.
-			RDADAT="$(awk '/<!--[\t ]*DATE/{gsub(/^[\t ]*<!--[\t ]*DATE *: *|[\t ]*-->.*/,"");print $0"T12:00:00Z";exit}' $FILE)"
-			RSSDES="$(awk '/<!--[\t ]*DESC/{gsub(/^[\t ]*<!--[\t ]*DESC *: *|[\t ]*-->.*/,"");print $0;exit}' $FILE)"
-			RSSTNOSRC="${FILE#*/}"
-			RSSTNOEXT="${RSSTNOSRC%%.*}"
-			FILETIT="$(pagetit "$FILE")"
-
-			xml_content >>"$RSSF"
-		done
-		print '</feed>' >>"$RSSF"
-	fi
-
-	# We copy existing *.html files from src to dest.
-	find "src" -type f -iname "*.html" | while IFS=$'\n' read -r LINEH; do
-		if [[ -r dest/${LINEH#*/} ]]; then
-			print "dest/${LINEH#*/} already exists"
-			continue
-		fi
-		cp -- "$LINEH" "dest/${LINEH#*/}"
-	done
-
-	cd ..
-	TOT=$(find "${RAC}/dest" -type f | wc -l)
-	print "Generated $TOT files"
 }
 
-if [[ -z $1 ]]; then
-	print "usage: ${0##*/} [website_root]"
+function copy_html {
+	typeset WSH_HTML
+
+	# We copy existing *.html files from src to dest.
+	find "src" -type f -iname "*.html" | while IFS=$'\n' read -r WSH_HTML; do
+		if [[ -f dest/${WSH_HTML#*/} ]]; then
+			print "dest/${WSH_HTML#*/} already exists"
+			continue
+		fi
+		cp -- "$WSH_HTML" "dest/${WSH_HTML#*/}"
+	done
+}
+
+if [[ -z $1 || $1 = "-h" ]]; then
+	print "usage: ${0##*/} [DIR]"
 	exit
 fi
 
 parse_config
 get_structure
 gen_page
+copy_html
+
+WSH_TOT="$(find "${WSH_RAC}/dest" -type f | wc -l)"
+print "Generated $WSH_TOT file(s) in ${WSH_RAC}/dest"
 
 exit

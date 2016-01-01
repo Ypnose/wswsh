@@ -1,50 +1,28 @@
-# wswsh - Ypnose - http://ywstd.fr
 # wswsh.conf.default
+# Ypnose - http://ywstd.fr
 
 # One config per website.
 
 # Site title.
-#WTIT=""
+#WSH_TIT=""
 
-# Site URL (without http://).
-# Used inside the feed.
-#WURL=""
+# Write the other interpreter
+# You can leave this option if you only concatenate files with cat(1).
+#WSH_INTERP=""
 
 # CSS style. Pretty obvious, right?
 # Write entire location from the src directory.
-#CSSF=""
+#WSH_CSSF=""
 
-# Write the other interpreter (smu for example, tested with 2c7b9d2ec0 rev).
-# https://github.com/Gottox/smu
-# You can leave this option if you only concatenate files.
-#INTERP=""
-
-# Default extension is txt, when EXT isn't specified.
-# If you want to write articles with HTML fragments,
-# EXT should be wshtml or wtfhtml.
-# If you want to write articles in markdown,
-# EXT should be md or markdown.
+# Default extension is txt, when WSH_EXT isn't specified.
+# If you want to write articles with HTML fragments, WSH_EXT should be
+# wshtml or wtfhtml.
 # DON'T WRITE html (redundant) or .txt (we don't need the dot).
-# For example, if you choose txt, it'll "use" files with the
-# following extensions: txt,TXT,txT,TxT,tXt and so on.
-#EXT=""
+# For example, if you choose txt, it'll "use" files with the following
+# extensions: txt,TXT,txT,TxT,tXt and so on.
+#WSH_EXT=""
 
 # Enable source file copy.
 # The file in src/ used for the converting, will be copied to dest/
 # Valid value: 1. Disable it by commenting out the line.
-#COPY=""
-
-# Enable RSS/Atom feed.
-# Valid value: 1. Disable it by commenting out the line.
-#FEED=""
-
-# Directory which contains the articles.
-# Those articles will appear in the feed
-# Default value: src/blog/
-#ARTD=""
-
-# Where to put the generated feed?
-# Write entire location from the src directory.
-# DON'T FORGET THE TRAILING SLASH!
-# Default value (when FEED is enabled): dest/
-#RSSDIR=""
+#WSH_COPY=""
