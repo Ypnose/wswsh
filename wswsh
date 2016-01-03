@@ -26,7 +26,6 @@ function get_structure {
 	if [[ ! -d ${WSH_RAC}/src ]]; then
 		prynt_err "src doesn't exist"
 	fi
-	mkdir -p "${WSH_RAC}/dest"
 
 	# Create src/ hierarchy in dest/
 	( cd "${WSH_RAC}/src"; find . -type d ) | while IFS=$'\n' read -r WSH_SDIR; do
