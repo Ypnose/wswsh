@@ -48,7 +48,7 @@ function def_regex {
 }
 
 function gen_page {
-	typeset WSH_GENF
+	typeset WSH_GENF WSH_GENF_NOSRC WSH_GENF_FINAL
 
 	if [[ -n $WSH_INTERP && ! -x $(whence -p $WSH_INTERP) ]]; then
 		prynt_err "$WSH_INTERP not found"
@@ -64,17 +64,19 @@ function gen_page {
 
 	cd "$WSH_RAC"
 	find "src" -type f -iname "*.${WSH_EXT:-txt}" | while IFS=$'\n' read -r WSH_GENF; do
-		FILENOSRC="${WSH_GENF#*/}"
-		FILEXPORT="dest/${FILENOSRC%%.*}.html"
+		WSH_GENF_NOSRC="${WSH_GENF#*/}"
+		WSH_GENF_FINAL="dest/${WSH_GENF_NOSRC%%.*}.html"
 		FILETIT="$(awk '/'"$WSH_PAT"'/{gsub(/'"$WSH_REG"'/,"");print $0;exit}' "$WSH_GENF")"
 
-		page_header >"$FILEXPORT"
-		if ! "${WSH_INTERP:-cat}" "$WSH_GENF" >>"$FILEXPORT"; then
+		page_header >"$WSH_GENF_FINAL"
+		if ! "${WSH_INTERP:-cat}" "$WSH_GENF" >>"$WSH_GENF_FINAL"; then
 			prynt_err "Generating $WSH_GENF failed"
 		fi
-		page_footer >>"$FILEXPORT"
+		page_footer >>"$WSH_GENF_FINAL"
 
-		(( WSH_COPY == 1 )) && cp "src/${FILENOSRC}" "dest/${FILENOSRC}"
+		if (( WSH_COPY == 1 )); then
+			cp "src/${WSH_GENF_NOSRC}" "dest/${WSH_GENF_NOSRC}"
+		fi
 	done
 }
 
