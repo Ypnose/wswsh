@@ -68,11 +68,12 @@ function gen_page {
 		FILEXPORT="dest/${FILENOSRC%%.*}.html"
 		FILETIT="$(awk '/'"$WSH_PAT"'/{gsub(/'"$WSH_REG"'/,"");print $0;exit}' "$WSH_GENF")"
 
-		page_head >"$FILEXPORT"
+		page_header >"$FILEXPORT"
 		if ! "${WSH_INTERP:-cat}" "$WSH_GENF" >>"$FILEXPORT"; then
 			prynt_err "Generating $WSH_GENF failed"
 		fi
-		page_foot >>"$FILEXPORT"
+		page_footer >>"$FILEXPORT"
+
 		(( WSH_COPY == 1 )) && cp "src/${FILENOSRC}" "dest/${FILENOSRC}"
 	done
 }

@@ -1,6 +1,6 @@
 # Page content
 
-function page_head {
+function page_header {
 	print '<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,7 +17,7 @@ function page_head {
 <body>'
 }
 
-function page_foot {
+function page_footer {
 	print '</body>
 </html>'
 }
