@@ -48,10 +48,11 @@ function def_regex {
 }
 
 function run_hook {
-	typeset WSH_HOOK
+	typeset WSH_HOOK WSH_FUNC
 
 	WSH_HOOK="$1"
-	if whence -v "$WSH_HOOK" >/dev/null; then
+	WSH_FUNC="$(whence -v "$WSH_HOOK")"
+	if [[ ${WSH_FUNC##* } = "function" ]]; then
 		"$WSH_HOOK"
 	fi
 }
@@ -77,7 +78,6 @@ function gen_page {
 		WSH_GENF_FINAL="dest/${WSH_GENF_NOSRC%%.*}.html"
 		FILETIT="$(awk '/'"$WSH_PAT"'/{gsub(/'"$WSH_REG"'/,"");print $0;exit}' "$WSH_GENF")"
 
-		run_hook pre_gen
 		page_header >"$WSH_GENF_FINAL"
 		if ! "${WSH_INTERP:-cat}" "$WSH_GENF" >>"$WSH_GENF_FINAL"; then
 			prynt_err "Generating $WSH_GENF failed"
