@@ -8,7 +8,7 @@ function prynt_err {
 	exit 1
 }
 
-function parse_config {
+function get_config {
 	if [[ -r ${WSH_RAC}/wswsh.conf ]]; then
 		. "${WSH_RAC}/wswsh.conf"
 	else
@@ -110,7 +110,7 @@ if [[ -z $1 || $1 = "-h" ]]; then
 	exit
 fi
 
-parse_config
+get_config
 get_structure
 gen_page
 copy_html
