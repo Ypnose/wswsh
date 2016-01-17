@@ -15,8 +15,9 @@ function parse_config {
 		prynt_err "Missing wswsh.conf in $WSH_RAC"
 	fi
 
-	if [[ -d ${WSH_RAC}/includes ]]; then
-		. "${WSH_RAC}/includes/"*
+	# NOT FINAL (SYMLINKS?)...
+	if [[ -f ${WSH_RAC}/includes/layout ]]; then
+		. "${WSH_RAC}/includes/layout"
 	fi
 }
 
@@ -48,12 +49,11 @@ function def_regex {
 }
 
 function run_hook {
-	typeset WSH_HOOK WSH_FUNC
+	typeset WSH_HOOK
 
 	WSH_HOOK="$1"
-	WSH_FUNC="$(whence -v "$WSH_HOOK")"
-	if [[ ${WSH_FUNC##* } = "function" ]]; then
-		"$WSH_HOOK"
+	if [[ -f ${WSH_RAC}/includes/${WSH_HOOK} ]]; then
+		. "${WSH_RAC}/includes/${WSH_HOOK}"
 	fi
 }
 
@@ -78,11 +78,13 @@ function gen_page {
 		WSH_GENF_FINAL="dest/${WSH_GENF_NOSRC%%.*}.html"
 		FILETIT="$(awk '/'"$WSH_PAT"'/{gsub(/'"$WSH_REG"'/,"");print $0;exit}' "$WSH_GENF")"
 
+		run_hook "pre_genpage"
 		page_header >"$WSH_GENF_FINAL"
 		if ! "${WSH_INTERP:-cat}" "$WSH_GENF" >>"$WSH_GENF_FINAL"; then
 			prynt_err "Generating $WSH_GENF failed"
 		fi
 		page_footer >>"$WSH_GENF_FINAL"
+		run_hook "post_genpage"
 
 		if (( WSH_COPY == 1 )); then
 			cp "src/${WSH_GENF_NOSRC}" "dest/${WSH_GENF_NOSRC}"
