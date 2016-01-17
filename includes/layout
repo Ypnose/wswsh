@@ -9,9 +9,9 @@ function page_header {
 		print "\t<link rel=\"stylesheet\" type=\"text/css\" href=\"/${WSH_CSSF}\" />"
 	fi
 	if [[ -n $WSH_TIT ]]; then
-		print "\t<title>${WSH_TIT}${FILETIT:+ | $FILETIT}</title>"
+		print "\t<title>${WSH_TIT}${WSH_GENF_TITLE:+ | $WSH_GENF_TITLE}</title>"
 	else
-		print "\t<title>${FILETIT}</title>"
+		print "\t<title>${WSH_GENF_TITLE}</title>"
 	fi
 	print '</head>
 <body>'

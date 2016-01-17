@@ -76,7 +76,7 @@ function gen_page {
 	find "src" -type f -iname "*.${WSH_EXT:-txt}" | while IFS=$'\n' read -r WSH_GENF; do
 		WSH_GENF_NOSRC="${WSH_GENF#*/}"
 		WSH_GENF_FINAL="dest/${WSH_GENF_NOSRC%%.*}.html"
-		FILETIT="$(awk '/'"$WSH_PAT"'/{gsub(/'"$WSH_REG"'/,"");print $0;exit}' "$WSH_GENF")"
+		WSH_GENF_TITLE="$(awk '/'"$WSH_PAT"'/{gsub(/'"$WSH_REG"'/,"");print $0;exit}' "$WSH_GENF")"
 
 		run_hook "pre_genpage"
 		page_header >"$WSH_GENF_FINAL"
