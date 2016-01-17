@@ -18,7 +18,7 @@ It has many advantages:
 How to use it?
 --------------
 
-NOTE: `wswsh` is being REFACTORED. Feed is disabled but it'll be restored. IT'S NOT STABLE!
+** NOTE: `wswsh` is being REFACTORED. Feed is disabled but it'll be restored. IT'S NOT STABLE! **
 
 Create a directory including the following files:
 
