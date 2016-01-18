@@ -58,7 +58,7 @@ function run_hook {
 }
 
 function gen_page {
-	typeset WSH_GENF WSH_GENF_NOSRC WSH_GENF_FINAL
+	typeset WSH_GENF WSH_GENF_NOSRC WSH_GENF_FINAL WSH_GENF_TITLE
 
 	if [[ -n $WSH_INTERP && ! -x $(whence -p $WSH_INTERP) ]]; then
 		prynt_err "$WSH_INTERP not found"
