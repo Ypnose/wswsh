@@ -78,13 +78,13 @@ function gen_page {
 		WSH_GENF_FINAL="dest/${WSH_GENF_NOSRC%%.*}.html"
 		WSH_GENF_TITLE="$(awk '/'"$WSH_PAT"'/{gsub(/'"$WSH_REG"'/,"");print $0;exit}' "$WSH_GENF")"
 
-		run_hook "pre_genpage"
+		run_hook pre_genpage
 		page_header >"$WSH_GENF_FINAL"
 		if ! "${WSH_INTERP:-cat}" "$WSH_GENF" >>"$WSH_GENF_FINAL"; then
 			prynt_err "Generating $WSH_GENF failed"
 		fi
 		page_footer >>"$WSH_GENF_FINAL"
-		run_hook "post_genpage"
+		run_hook post_genpage
 
 		if (( WSH_COPY == 1 )); then
 			cp "src/${WSH_GENF_NOSRC}" "dest/${WSH_GENF_NOSRC}"
