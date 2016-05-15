@@ -21,3 +21,30 @@ function page_footer {
 	print '</body>
 </html>'
 }
+
+function gen_site_xml {
+	print '<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+	<title>'"${WSH_TIT}"'</title>
+	<subtitle>'"${WSH_SUBTIT}"'</subtitle>
+	<link href="http://'${WSH_TIT}'/"/>
+	<link type="application/atom+xml" rel="self" href="http://'${WSH_TIT}'/'${RSSDIR}'atom.xml"/>
+	<updated>'"${RDAT}"'</updated>
+	<author>
+		<name>'"${WSH_AUTHOR}"'</name>
+	</author>
+	<id>http://'"${WSH_TIT}"'/</id>
+'
+}
+
+function xml_content {
+	print '\t<entry>
+		<title>'"${WSH_GENF_TITLE}"'</title>
+		<link href="http://'${WSH_TIT}'/'${WSH_GENF_HTML}'"/>
+		<id>http://'"${WURL}"'/'"${WSH_GENF_HTML}"'</id>
+		<updated>'"${RDADAT}"'</updated>
+		<summary>'"${RSSDES}"'</summary>
+	</entry>
+'
+}

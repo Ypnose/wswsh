@@ -57,6 +57,12 @@ function run_hook {
 	fi
 }
 
+function gen_names {
+	WSH_GENF_TITLE="$(awk '/'"$WSH_PAT"'/{gsub(/'"$WSH_REG"'/,"");print $0;exit}' ${1})"
+	WSH_GENF_NOSRC="${1#*/}"
+	WSH_GENF_HTML="${WSH_GENF_NOSRC%%.*}.html"
+}
+
 function gen_page {
 	typeset WSH_GENF WSH_GENF_NOSRC WSH_GENF_FINAL WSH_GENF_TITLE
 
@@ -74,10 +80,8 @@ function gen_page {
 
 	cd "$WSH_RAC"
 	find "src" -type f -iname "*.${WSH_EXT:-txt}" | while IFS=$'\n' read -r WSH_GENF; do
-		WSH_GENF_NOSRC="${WSH_GENF#*/}"
-		WSH_GENF_FINAL="dest/${WSH_GENF_NOSRC%%.*}.html"
-		WSH_GENF_TITLE="$(awk '/'"$WSH_PAT"'/{gsub(/'"$WSH_REG"'/,"");print $0;exit}' "$WSH_GENF")"
-
+		gen_names "$WSH_GENF"
+		WSH_GENF_FINAL="dest/${WSH_GENF_HTML}"
 		run_hook "pre_genpage"
 		page_header >"$WSH_GENF_FINAL"
 		if ! "${WSH_INTERP:-cat}" "$WSH_GENF" >>"$WSH_GENF_FINAL"; then
@@ -90,6 +94,32 @@ function gen_page {
 			cp "src/${WSH_GENF_NOSRC}" "dest/${WSH_GENF_NOSRC}"
 		fi
 	done
+}
+
+function gen_feed {
+	# RSS / Atom
+	if (( FEED == 1 )); then
+		[[ -n $ARTD && ! -d $ARTD ]] && prynt_err "The article directory is missing!"
+		# XML date, emulates $(date --rfc-3339=seconds) from GNU date.
+		RDAT=$(LC_ALL=C date "+%Y-%m-%dT%H:%M:%SZ")
+		RSSF="dest/${RSSDIR}atom.xml"
+		# Tip: date format -> year-month-day
+		SORD="$(find "${ARTD:-src/blog/}" -mindepth 2 -type f -iname "*.${EXT:-txt}" | while IFS=$'\n' read -r ART; do \
+			awk '/<!--[\t ]*DATE/{gsub(/^[\t ]*<!--[\t ]*DATE *: *|[\t ]*-->.*/,"");printf "%s",$0;exit}' $ART; \
+			print " $ART"; done | sort -nr | awk '{gsub(/201[2-8]-[0-1][0-9]-[0-3][0-9] /,"");print}')"
+		if [[ -z $SORD ]]; then
+			prynt_err "No articles found inside ${ARTD:-src/blog/}"
+		fi
+		gen_site_xml >"$RSSF"
+		print -- "$SORD" | while IFS=$'\n' read -r WSH_GENF; do
+			# Don't need to enable a specific hour, let's assume I wrote the pages at midday.
+			RDADAT="$(awk '/<!--[\t ]*DATE/{gsub(/^[\t ]*<!--[\t ]*DATE *: *|[\t ]*-->.*/,"");print $0"T12:00:00Z";exit}' $WSH_GENF)"
+			RSSDES="$(awk '/<!--[\t ]*DESC/{gsub(/^[\t ]*<!--[\t ]*DESC *: *|[\t ]*-->.*/,"");print $0;exit}' $WSH_GENF)"
+			gen_names "$WSH_GENF"
+			xml_content >>"$RSSF"
+		done
+		print '</feed>' >>"$RSSF"
+	fi
 }
 
 function copy_html {
@@ -113,6 +143,7 @@ fi
 get_config
 get_structure
 gen_page
+gen_feed
 copy_html
 
 WSH_TOT="$(find "${WSH_RAC}/dest" -type f | wc -l)"
