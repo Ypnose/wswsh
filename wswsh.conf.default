@@ -3,8 +3,10 @@
 
 # One config per website.
 
-# Site title.
+# Site title etc.
 #WSH_TIT=""
+#WSH_SUBTIT=""
+#WSH_AUTHOR=""
 
 # Write the other interpreter
 # You can leave this option if you only concatenate files with cat(1).
@@ -26,3 +28,18 @@
 # The file in src/ used for the converting, will be copied to dest/
 # Valid value: 1. Disable it by commenting out the line.
 #WSH_COPY=""
+
+# Enable RSS/Atom feed.
+# Valid value: 1. Disable it by commenting out the line.
+#FEED=""
+
+# Directory which contains the articles.
+# Those articles will appear in the feed
+# Default value: src/blog/
+#ARTD=""
+
+# Where to put the generated feed?
+# Write entire location from the src directory.
+# DON'T FORGET THE TRAILING SLASH!
+# Default value (when FEED is enabled): dest/
+#RSSDIR=""
