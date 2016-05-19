@@ -42,7 +42,7 @@ function xml_content {
 	print '\t<entry>
 		<title>'"${WSH_GENF_TITLE}"'</title>
 		<link href="http://'${WSH_TIT}'/'${WSH_GENF_HTML}'"/>
-		<id>http://'"${WURL}"'/'"${WSH_GENF_HTML}"'</id>
+		<id>http://'"${WSH_TIT}"'/'"${WSH_GENF_HTML}"'</id>
 		<updated>'"${RDADAT}"'</updated>
 		<summary>'"${RSSDES}"'</summary>
 	</entry>
