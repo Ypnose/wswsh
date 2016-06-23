@@ -14,7 +14,6 @@ function get_config {
 	else
 		prynt_err "Missing wswsh.conf in $WSH_RAC"
 	fi
-
 	# NOT FINAL (SYMLINKS?)...
 	if [[ -f ${WSH_RAC}/includes/layout ]]; then
 		. "${WSH_RAC}/includes/layout"
@@ -27,7 +26,6 @@ function get_structure {
 	if [[ ! -d ${WSH_RAC}/src ]]; then
 		prynt_err "src doesn't exist"
 	fi
-
 	# Create src/ hierarchy in dest/
 	( cd "${WSH_RAC}/src"; find . -type d ) | while IFS=$'\n' read -r WSH_SDIR; do
 		mkdir -p "${WSH_RAC}/dest/${WSH_SDIR#*/}"
