@@ -103,6 +103,43 @@ function copy_html {
 	done
 }
 
+function awk_parser {
+	awk 'BEGIN { FS = " "; c = 0 }
+	function pr_cnt() { printf("%s|", $0); (( c++ )) }
+	{
+		if (c < 3) {
+			if ($0 ~ /^[\t ]*<!-- +D(ATE|ESC):/) {
+				gsub(/^[\t ]*<!-- +D(ATE|ESC): +| +-->[\t ]*$/,""); pr_cnt(); next
+			} else if ($0 ~ /'"$WSH_PAT"'/) {
+				gsub(/'"$WSH_REG"'/,""); pr_cnt(); next
+			}
+		} else { exit }
+	}
+	END { printf("\n") }' "$1"
+}
+
+function gen_atom {
+	typeset WSH_ATOM_RUN WSH_ATOM_FINAL WSH_ATOM_DATE WSH_ATOM_DESC WSH_ATOM_TITLE p
+
+	if [[ -n $WSH_ATOM ]]; then
+		# XML date, emulates $(date --rfc-3339=seconds) from GNU date.
+		# Works with busybox(1) too...
+		WSH_ATOM_RUN=$(LC_ALL=C date "+%Y-%m-%dT%H:%M:%SZ")
+		atom_header >"dest/${WSH_ATOM_DIR}atom.xml"
+		for p in $WSH_ATOM; do
+			if [[ ! -r src/${p} ]]; then
+				prynt_err "src/${p} is either missing or unreadable"
+			fi
+			WSH_ATOM_FINAL="${p%%.*}.html"
+			awk_parser "src/${p}" | {
+				IFS='|' read -r WSH_ATOM_DATE WSH_ATOM_DESC WSH_ATOM_TITLE
+				atom_content >>"dest/${WSH_ATOM_DIR}atom.xml"
+			}
+		done
+		print '</feed>' >>"dest/${WSH_ATOM_DIR}atom.xml"
+	fi
+}
+
 if [[ -z $1 || $1 = "-h" ]]; then
 	print "usage: ${0##*/} [DIR]"
 	exit
@@ -112,6 +149,7 @@ get_config
 get_structure
 gen_page
 copy_html
+gen_atom
 
 WSH_TOT="$(find "${WSH_RAC}/dest" -type f | wc -l)"
 print "Generated $WSH_TOT file(s) in ${WSH_RAC}/dest"

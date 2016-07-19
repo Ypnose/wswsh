@@ -13,23 +13,22 @@ It has many advantages:
   * Human readable configuration
   * Atom 1.0 Feed support
 
-*You can read another howto with examples [here](http://blog.ywstd.fr/2013/blogging-shell.html) (might be a good intro).*
+*You can read another howto with examples [here](http://ywstd.fr/blog/2013/blogging-shell.html) (might be a good intro).*
 
 How to use it?
 --------------
 
-**NOTE: `wswsh` is being REFACTORED. Feed is disabled but it'll be restored. IT'S NOT STABLE!**
+**NOTE: `wswsh` is being REFACTORED. Feed is WIP. IT'S NOT STABLE!**
 
 Create a directory including the following files:
 
 	includes (contains layout)
-	Makefile
 	wswsh
 	wswsh.conf.default
 
-You'll need a config file. Run `make wswsh.conf` or rename the file
-`wswsh.conf.default` to `wswsh.conf`. Edit it according to your needs.
-The comments explain almost everything.  
+You'll need a config file. Rename the file `wswsh.conf.default` to
+`wswsh.conf`. Edit it according to your needs. The comments explain
+almost everything.  
 
 A typical hierarchy contains a `src` directory, with your website inside
 it.
@@ -37,7 +36,6 @@ it.
 	.
 	├── includes
 	│   └── layout
-	├── Makefile
 	├── src
 	│   ├── css
 	│   │   └── style.css
@@ -51,18 +49,17 @@ it.
 	├── wswsh
 	└── wswsh.conf
 
-Each folder in `src` will be reproduced in a new directory called `dest`.
+Each folder in `src` will be reproduced in a new directory `dest`.
 **wswsh** also supports [ahrf](https://github.com/Ypnose/ahrf).
 There is no default interpreter, only `cat` is called. It involves posts
 written in HTML.
 
-When you're ready, launch `make gen` (or just `make`). Using the
-previous example, we now have:
+When you're ready, launch `./wswsh "$PWD"`. Using the previous example,
+we now have:
 
 	.
 	├── includes
 	│   └── layout
-	├── Makefile
 	├── dest
 	│   ├── css
 	│   │   └── style.css
@@ -94,12 +91,6 @@ Note(s)
 If you want to have the same `wswsh` executable for all your blogs
 (assuming you have several websites), it's possible to put `wswsh` in
 your `PATH`, instead of having a "redundant" file, in every directory.
-You will have to modify the `Makefile`:
-
-```make
-gen:
-	@${SOFT} ${PWD}
-```
 
 The default behavior allows you to modify `wswsh` for your websites. So,
 it's possible to write custom modifications per site.
@@ -107,7 +98,7 @@ it's possible to write custom modifications per site.
 An "interpreter" can be run if it's placed ouside your `PATH`. Write the
 full path to the executable, within `wswsh.conf`:
 
-	INTERP="/home/foo/my_exec"
+	WSH_INTERP="/home/foo/my_exec"
 
 Why not provide a script sh compliant (or even bash)?
 -----------------------------------------------------
@@ -139,9 +130,9 @@ Website(s)
 ----------
 
 Powering:
-  * http://blog.ywstd.fr
-  * https://cosmofox.net/blog/
+  * http://ywstd.fr/blog/
+  * https://0101010.one/blog/
   * http://savoirvivre.intraaktion.de
 
-You decided to adopt wswsh for your website(s)? Please contact me. I'll
-add it in the README.
+You decided to adopt wswsh for your website(s)? Please contact me. I
+would be happy to it in the README.
