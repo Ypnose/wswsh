@@ -135,4 +135,4 @@ Powering:
   * http://savoirvivre.intraaktion.de
 
 You decided to adopt wswsh for your website(s)? Please contact me. I
-would be happy to it in the README.
+would be happy to add it in the README.
