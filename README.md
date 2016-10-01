@@ -22,11 +22,11 @@ How to use it?
 
 Create a directory including the following files:
 
-	includes (contains layout)
+	includes/layout
 	wswsh
 	wswsh.conf.default
 
-You'll need a config file. Rename the file `wswsh.conf.default` to
+You'll need a config file. Copy the file `wswsh.conf.default` to
 `wswsh.conf`. Edit it according to your needs. The comments explain
 almost everything.  
 
@@ -49,7 +49,7 @@ it.
 	├── wswsh
 	└── wswsh.conf
 
-Each folder in `src` will be reproduced in a new directory `dest`.
+Each directory in `src` will be reproduced in a new directory `dest`.
 **wswsh** also supports [ahrf](https://github.com/Ypnose/ahrf).
 There is no default interpreter, only `cat` is called. It involves posts
 written in HTML.
