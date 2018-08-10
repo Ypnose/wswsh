@@ -100,7 +100,7 @@ full path to the executable, within `wswsh.conf`:
 
 	WSH_INTERP="/home/foo/my_exec"
 
-Why not provide a script sh compliant (or even bash)?
+Why not provide a script OpenBSD ksh compliant (or even posix shell)?
 -----------------------------------------------------
 
 Few months ago, I still wanted to write a `sh` compliant version but I
@@ -111,7 +111,7 @@ Maintaining two redundant versions isn't easy and I do not want to work
 for nothing. If you're still interested, you're free to adapt to `sh`.
 It shouldn't be complicated.
 
-`awk` compatibility
+OpenBSD `awk` compatibility
 -------------------
 
 When I added awk regexes, one of my goal was to support `nawk`, `mawk`
@@ -125,6 +125,7 @@ Copyright
 ---------
 
 Code created by Ypnose, under BSD (3-Clause) License.
+Will be released with ISC or MIT
 
 Website(s)
 ----------
