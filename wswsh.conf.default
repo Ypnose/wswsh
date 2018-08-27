@@ -1,13 +1,13 @@
-# wswsh.conf
+# wswsh.conf(5)
 # Ypnose - http://ywstd.fr
 # One config per website.
 
 # Site title.
-#WSH_TIT=""
+#$WSH_TIT=""
 
 # CSS style. Pretty obvious, right?
 # Write entire location from the src directory.
-#WSH_CSSF=""
+#$WSH_CSSF=""
 
 # Default extension is txt, when WSH_EXT isn't specified.
 # If you want to write articles with HTML fragments, WSH_EXT should be
@@ -15,27 +15,27 @@
 # DON'T WRITE html (redundant) or .txt (you don't need the dot).
 # For example, if you choose txt, it'll "use" files with the following
 # extensions: txt,TXT,txT,TxT,tXt and so on.
-#WSH_EXT=""
+#$WSH_EXT=""
 
 # Write the other interpreter
 # You can leave this option if you only concatenate files with cat(1).
-#WSH_INTERP=""
+#$WSH_INTERP=""
 
 # Enable source file copy.
 # The file in src/ used for the converting, will be copied to dest/
 # Valid value: 1. Disable it by commenting out the line.
-#WSH_COPY="1"
+#$WSH_COPY="1"
 
 # The website URL (used inside the 'atom.xml' file)
-#WSH_URL=""
+#$WSH_URL=""
 
 # Enable Atom feed. Write the newest page location FIRST.
 # Disable it by commenting out the variable.
 # Write entire location from the src directory.
-#WSH_ATOM=""
+#$WSH_ATOM=""
 
 # Where to put the generated Atom feed? Only write the final directory
 # and leave out 'atom.xml' (it is implicit).
 # DO NOT FORGET THE TRAILING SLASH!
 # Write entire location from the src directory.
-#WSH_ATOM_DIR=""
+#$WSH_ATOM_DIR=""
