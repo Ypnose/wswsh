@@ -3,12 +3,12 @@
 
 WSH_RAC="$1"
 
-function prynt_err {
+prynt_err() {
 	print -u2 "ERR:" "$1"
 	exit 1
 }
 
-function get_config {
+get_config() {
 	if [[ -r ${WSH_RAC}/wswsh.conf ]]; then
 		. "${WSH_RAC}/wswsh.conf"
 	else
@@ -20,7 +20,7 @@ function get_config {
 	fi
 }
 
-function get_structure {
+get_structure() {
 	typeset WSH_SDIR
 
 	if [[ ! -d ${WSH_RAC}/src ]]; then
@@ -32,7 +32,7 @@ function get_structure {
 	done
 }
 
-function def_regex {
+def_regex() {
 	# Extensible part...
 	case $WSH_INTERP in
 		ahrf*)
@@ -46,7 +46,7 @@ function def_regex {
 	esac
 }
 
-function run_hook {
+run_hook() {
 	typeset WSH_HOOK
 
 	WSH_HOOK="$1"
@@ -55,7 +55,7 @@ function run_hook {
 	fi
 }
 
-function gen_page {
+gen_page() {
 	typeset WSH_GENF WSH_GENF_NOSRC WSH_GENF_FINAL WSH_GENF_TITLE
 
 	if [[ -n $WSH_INTERP && ! -x $(whence -p $WSH_INTERP) ]]; then
@@ -90,7 +90,7 @@ function gen_page {
 	done
 }
 
-function copy_html {
+copy_html() {
 	typeset WSH_HTML
 
 	# We copy existing *.html files from src to dest.
@@ -103,7 +103,7 @@ function copy_html {
 	done
 }
 
-function awk_parser {
+awk_parser() {
 	awk 'BEGIN { FS = " "; c = 0 }
 	function pr_cnt() { printf("%s|", $0); (( c++ )) }
 	{
@@ -118,7 +118,7 @@ function awk_parser {
 	END { printf("\n") }' "$1"
 }
 
-function gen_atom {
+gen_atom(){
 	typeset WSH_ATOM_RUN WSH_ATOM_FINAL WSH_ATOM_DATE WSH_ATOM_DESC WSH_ATOM_TITLE p
 
 	if [[ -n $WSH_ATOM ]]; then
