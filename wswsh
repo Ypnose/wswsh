@@ -3,8 +3,8 @@
 
 WSH_RAC="$1"
 
-function prynt_err {
-	print -u2 "ERR:" "$1"
+function p_err {
+	print -ru2 -- "$1"
 	exit 1
 }
 
@@ -12,7 +12,7 @@ function get_config {
 	if [[ -r ${WSH_RAC}/wswsh.conf ]]; then
 		. "${WSH_RAC}/wswsh.conf"
 	else
-		prynt_err "Missing wswsh.conf in $WSH_RAC"
+		p_err "Missing wswsh.conf in $WSH_RAC"
 	fi
 	# NOT FINAL (SYMLINKS?)...
 	if [[ -f ${WSH_RAC}/includes/layout ]]; then
@@ -24,7 +24,7 @@ function get_structure {
 	typeset WSH_SDIR
 
 	if [[ ! -d ${WSH_RAC}/src ]]; then
-		prynt_err "src doesn't exist"
+		p_err "src doesn't exist"
 	fi
 	# Create src/ hierarchy in dest/
 	( cd "${WSH_RAC}/src"; find . -type d ) | while IFS=$'\n' read -r WSH_SDIR; do
@@ -59,7 +59,7 @@ function gen_page {
 	typeset WSH_GENF WSH_GENF_NOSRC WSH_GENF_FINAL WSH_GENF_TITLE
 
 	if [[ -n $WSH_INTERP && ! -x $(whence -p $WSH_INTERP) ]]; then
-		prynt_err "$WSH_INTERP not found"
+		p_err "$WSH_INTERP not found"
 	fi
 
 	if [[ -n $WSH_CSSF && -r ${WSH_RAC}/src/${WSH_CSSF} ]]; then
@@ -80,7 +80,7 @@ function gen_page {
 		page_header >"$WSH_GENF_FINAL"
 		run_hook post_header
 		if ! "${WSH_INTERP:-cat}" "$WSH_GENF" >>"$WSH_GENF_FINAL"; then
-			prynt_err "Generating $WSH_GENF failed"
+			p_err "Generating $WSH_GENF failed"
 		fi
 		run_hook pre_footer
 		page_footer >>"$WSH_GENF_FINAL"
