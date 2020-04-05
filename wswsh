@@ -2,6 +2,8 @@
 # Script by Ypnose - http://ywstd.fr
 
 WSH_BASEDIR="$1"
+WSH_CSS="0"
+WSH_COPY="0"
 
 function p_err {
 	print -ru2 -- "$1"
