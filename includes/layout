@@ -22,30 +22,3 @@ function page_footer {
 </body>
 </html>'
 }
-
-function atom_header {
-	print '<?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom">
-
-	<title>'"${WSH_TIT}"'</title>
-	<subtitle></subtitle>
-	<link href="'${WSH_URL}'/"/>
-	<link type="application/atom+xml" rel="self" href="'${WSH_URL}'/'${WSH_ATOM_DIR}'atom.xml"/>
-	<updated>'"${WSH_ATOM_RUN}"'</updated>
-	<author>
-		<name>My_awesome_name</name>
-	</author>
-	<id>'"${WSH_URL}"'/</id>
-'
-}
-
-function atom_content {
-	print '\t<entry>
-		<title>'"${WSH_ATOM_TITLE}"'</title>
-		<link href="'${WSH_URL}'/'${WSH_ATOM_FINAL}'"/>
-		<id>'"${WSH_URL}"'/'"${WSH_ATOM_FINAL}"'</id>
-		<updated>'"${WSH_ATOM_DATE}"'T12:00:00Z</updated>
-		<summary>'"${WSH_ATOM_DESC}"'</summary>
-	</entry>
-'
-}

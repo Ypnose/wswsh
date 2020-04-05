@@ -25,17 +25,3 @@
 # The file in src/ used for the converting, will be copied to dest/
 # Valid value: 1. Disable it by commenting out the line.
 #WSH_COPY="1"
-
-# The website URL (used inside the 'atom.xml' file)
-#WSH_URL=""
-
-# Enable Atom feed. Write the newest page location FIRST.
-# Disable it by commenting out the variable.
-# Write entire location from the src directory.
-#WSH_ATOM=""
-
-# Where to put the generated Atom feed? Only write the final directory
-# and leave out 'atom.xml' (it is implicit).
-# DO NOT FORGET THE TRAILING SLASH!
-# Write entire location from the src directory.
-#WSH_ATOM_DIR=""
