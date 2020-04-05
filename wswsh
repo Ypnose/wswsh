@@ -92,7 +92,7 @@ function gen_page {
 		run_hook post_genpage
 
 		if (( WSH_COPY == 1 )); then
-			cp "src/${WSH_GENFILE_NOSRC}" "dest/${WSH_GENFILE_NOSRC}"
+			cp -a "src/${WSH_GENFILE_NOSRC}" "dest/${WSH_GENFILE_NOSRC}"
 		fi
 	done
 }
@@ -106,7 +106,7 @@ function copy_html {
 			print "dest/${WSH_HTML#*/} already exists"
 			continue
 		fi
-		cp -- "$WSH_HTML" "dest/${WSH_HTML#*/}"
+		cp -a -- "$WSH_HTML" "dest/${WSH_HTML#*/}"
 	done
 }
 
