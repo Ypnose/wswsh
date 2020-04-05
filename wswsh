@@ -1,5 +1,6 @@
 #!/usr/bin/mksh
 # Script by Ypnose - http://ywstd.fr
+set -e
 
 WSH_BASEDIR="$1"
 WSH_CSS="0"
