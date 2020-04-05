@@ -11,11 +11,10 @@ function p_err {
 }
 
 function get_config {
-	if [[ -r ${WSH_BASEDIR}/wswsh.conf ]]; then
-		. "${WSH_BASEDIR}/wswsh.conf"
-	else
+	if [[ ! -r ${WSH_BASEDIR}/wswsh.conf ]]; then
 		p_err "Missing wswsh.conf in $WSH_BASEDIR"
 	fi
+	. "${WSH_BASEDIR}/wswsh.conf"
 	# NOT FINAL (SYMLINKS?)...
 	if [[ -f ${WSH_BASEDIR}/includes/layout ]]; then
 		. "${WSH_BASEDIR}/includes/layout"
