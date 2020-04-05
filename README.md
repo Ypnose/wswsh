@@ -11,14 +11,11 @@ It has many advantages:
   * Easily "hackable" with external scripts / interpreters
   * Less than 140 LOC (without external layouts)
   * Human readable configuration
-  * Atom 1.0 Feed support
 
 *You can read another howto with examples [here](http://ywstd.fr/blog/2013/blogging-shell.html) (might be a good intro).*
 
 How to use it?
 --------------
-
-**NOTE: `wswsh` is being REFACTORED. Feed is WIP. IT'S NOT STABLE!**
 
 Create a directory including the following files:
 
@@ -34,51 +31,52 @@ A typical hierarchy contains a `src` directory, with your website inside
 it.
 
 	.
-	├── includes
+	├── includes/
 	│   └── layout
-	├── src
-	│   ├── css
+	├── src/
+	│   ├── css/
 	│   │   └── style.css
-	│   ├── blog
+	│   ├── blog/
 	│   │   └── my_post.txt
-	│   ├── me
+	│   ├── me/
 	│   │   └── john_doe.txt
-	│   └── foo
-	│       └── baz
+	│   └── foo/
+	│       └── baz/
 	│           └── this_is_a_test.txt
 	├── wswsh
 	└── wswsh.conf
 
 Each directory in `src` will be reproduced in a new directory `dest`.
-**wswsh** also supports [ahrf](https://github.com/Ypnose/ahrf).
+
 There is no default interpreter, only `cat` is called. It involves posts
 written in HTML.
+**wswsh** also supports [ahrf](https://github.com/Ypnose/ahrf).
 
 When you're ready, launch `./wswsh "$PWD"`. Using the previous example,
 we now have:
 
 	.
-	├── includes
+	├── includes/
 	│   └── layout
-	├── dest
-	│   ├── css
+	├── dest/
+	│   ├── css/
 	│   │   └── style.css
-	│   ├── blog
+	│   ├── blog/
 	│   │   └── my_post.html
-	│   ├── me
+	│   ├── me/
 	│   │   └── john_doe.html
-	│   └── foo
-	│       └── baz
+	│   └── foo/
+	│       └── baz/
 	│           └── this_is_a_test.html
-	├── src
-	│   ├── css
+	├── src/
+	│   ├── css/
 	│   │   └── style.css
-	│   ├── blog
+	│   ├── blog/
 	│   │   └── my_post.txt
-	│   ├── me
+	│   ├── me/
 	│   │   └── john_doe.txt
-	│   └── foo
-	│       └── baz
+	│   └── foo/
+	│       └── baz/
 	│           └── this_is_a_test.txt
 	├── wswsh
 	└── wswsh.conf
@@ -94,6 +92,10 @@ your `PATH`, instead of having a "redundant" file, in every directory.
 
 The default behavior allows you to modify `wswsh` for your websites. So,
 it's possible to write custom modifications per site.
+
+The true "power" of `wswsh` resides in hooks launched at many different
+steps. Those hooks are launched inside `wswsh` env allowing you to use
+variables to launch all kind of specific actions.
 
 An "interpreter" can be run if it's placed ouside your `PATH`. Write the
 full path to the executable, within `wswsh.conf`:
@@ -131,7 +133,6 @@ Website(s)
 
 Powering:
   * http://ywstd.fr/blog/
-  * https://0101010.one/blog/
   * http://savoirvivre.intraaktion.de
 
 You decided to adopt wswsh for your website(s)? Please contact me. I
