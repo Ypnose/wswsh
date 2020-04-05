@@ -20,11 +20,11 @@ function get_config {
 	fi
 }
 
-function get_structure {
-	typeset WSH_SDIR
+function get_recdirs {
+	typeset WSH_DESTDIR
 
 	if [[ ! -d ${WSH_BASEDIR}/src ]]; then
-		p_err "src doesn't exist"
+		p_err "src directory is missing"
 	fi
 	# Create src/ hierarchy in dest/
 	( cd "${WSH_BASEDIR}/src"; find . -type d ) | while IFS= read -r WSH_DESTDIR; do
@@ -32,7 +32,7 @@ function get_structure {
 	done
 }
 
-function def_regex {
+function define_regex {
 	# Extensible part...
 	case $WSH_INTERP in
 		ahrf*)
@@ -61,7 +61,7 @@ function gen_page {
 	typeset WSH_GENFILE WSH_GENFILE_NOSRC WSH_GENFILE_FINAL WSH_GENFILE_TITLE
 
 	if [[ -n $WSH_INTERP && ! -x $(whence -p $WSH_INTERP) ]]; then
-		p_err "$WSH_INTERP not found"
+		p_err "$WSH_INTERP not found in PATH"
 	fi
 
 	if [[ -n $WSH_CSSFILE && -r ${WSH_BASEDIR}/src/${WSH_CSSFILE} ]]; then
@@ -71,7 +71,7 @@ function gen_page {
 	fi
 
 	# Define the regexes
-	def_regex
+	define_regex
 
 	cd "$WSH_BASEDIR"
 	find src -type f -iname "*.${WSH_EXT:-txt}" | while IFS= read -r WSH_GENFILE; do
@@ -115,7 +115,7 @@ if [[ -z $1 || $1 = "-h" ]]; then
 fi
 
 get_config
-get_structure
+get_recdirs
 gen_page
 copy_html
 
