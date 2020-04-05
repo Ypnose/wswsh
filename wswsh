@@ -47,6 +47,8 @@ function def_regex {
 }
 
 function run_hook {
+	# Run hooks before & after generating the page
+	# Hooks can use all variables defined inside wswsh
 	typeset WSH_HOOK
 
 	WSH_HOOK="$1"
@@ -63,6 +65,7 @@ function gen_page {
 	fi
 
 	if [[ -n $WSH_CSSFILE && -r ${WSH_BASEDIR}/src/${WSH_CSSFILE} ]]; then
+		# WSH_CSS variable can be used in layout to trigger actions
 		WSH_CSS="1"
 		cp -a "${WSH_BASEDIR}/src/${WSH_CSSFILE}" "${WSH_BASEDIR}/dest/${WSH_CSSFILE}"
 	fi
@@ -74,6 +77,7 @@ function gen_page {
 	find src -type f -iname "*.${WSH_EXT:-txt}" | while IFS= read -r WSH_GENFILE; do
 		WSH_GENFILE_NOSRC="${WSH_GENFILE#*/}"
 		WSH_GENFILE_FINAL="dest/${WSH_GENFILE_NOSRC%%.*}.html"
+		# WSH_GENFILE_TITLE can be used in layout
 		WSH_GENFILE_TITLE="$(awk '/'"$WSH_PAT"'/{gsub(/'"$WSH_REG"'/,"");print $0;exit}' "$WSH_GENFILE")"
 
 		run_hook pre_genpage
