@@ -3,11 +3,11 @@
 # One config per website.
 
 # Site title.
-#WSH_TIT=""
+#WSH_TITLE=""
 
 # CSS style. Pretty obvious, right?
 # Write entire location from the src directory.
-#WSH_CSSF=""
+#WSH_CSSFILE=""
 
 # Default extension is txt, when WSH_EXT isn't specified.
 # If you want to write articles with HTML fragments, WSH_EXT should be
