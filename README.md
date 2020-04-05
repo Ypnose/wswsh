@@ -94,8 +94,8 @@ The default behavior allows you to modify `wswsh` for your websites. So,
 it's possible to write custom modifications per site.
 
 The true "power" of `wswsh` resides in hooks launched at many different
-steps. Those hooks are launched inside `wswsh` env allowing you to use
-variables to launch all kind of specific actions.
+steps. Those hooks are sourced inside `wswsh` env allowing you to use
+inherited variables to launch all kind of specific actions.
 
 An "interpreter" can be run if it's placed ouside your `PATH`. Write the
 full path to the executable, within `wswsh.conf`:
