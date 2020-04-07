@@ -38,12 +38,12 @@ function define_regex {
 	# Extensible part...
 	case $WSH_INTERP in
 		ahrf*)
-			WSH_PAT="^[\t ]*:"
-			WSH_REG="^[\t ]*:[\t ]*|[\t ]*:[\t ]*$"
+			WSH_PATTERN="^[\t ]*:"
+			WSH_REGEX="^[\t ]*:[\t ]*|[\t ]*:[\t ]*$"
 			;;
 		*)
-			WSH_PAT="<h1>"
-			WSH_REG="^[\t ]*<h1>[\t ]*|[\t ]*<\/h1>.*$"
+			WSH_PATTERN="<h1>"
+			WSH_REGEX="^[\t ]*<h1>[\t ]*|[\t ]*<\/h1>.*$"
 			;;
 	esac
 }
@@ -80,7 +80,7 @@ function gen_page {
 		WSH_GENFILE_NOSRC="${WSH_GENFILE#*/}"
 		WSH_GENFILE_FINAL="dest/${WSH_GENFILE_NOSRC%%.*}.html"
 		# WSH_GENFILE_TITLE can be used in layout
-		WSH_GENFILE_TITLE="$(awk '/'"$WSH_PAT"'/{gsub(/'"$WSH_REG"'/,"");print $0;exit}' "$WSH_GENFILE")"
+		WSH_GENFILE_TITLE="$(awk '/'"$WSH_PATTERN"'/{gsub(/'"$WSH_REGEX"'/,"");print $0;exit}' "$WSH_GENFILE")"
 
 		run_hook pre_genpage
 		page_header >"$WSH_GENFILE_FINAL"
