@@ -4,7 +4,8 @@ function page_header {
 	print -r -- '<!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="utf-8" />'
+	<meta charset="utf-8" />
+	<meta name="generator" content="wswsh">'
 	if (( WSH_CSS == 1 )); then
 		print -r -- "	<link rel=\"stylesheet\" type=\"text/css\" href=\"/${WSH_CSSFILE}\" />"
 	fi
