@@ -1,4 +1,4 @@
-#!/usr/bin/mksh
+#!/usr/bin/env mksh
 # Script by Ypnose - http://ywstd.fr
 set -e
 
