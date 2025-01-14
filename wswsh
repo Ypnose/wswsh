@@ -34,20 +34,6 @@ function get_recdirs {
 	done
 }
 
-function define_regex {
-	# Extensible part...
-	case $WSH_INTERP in
-		ahrf*)
-			WSH_PATTERN="^[\t ]*:"
-			WSH_REGEX="^[\t ]*:[\t ]*|[\t ]*:[\t ]*$"
-			;;
-		*)
-			WSH_PATTERN="<h1>"
-			WSH_REGEX="^[\t ]*<h1>[\t ]*|[\t ]*<\/h1>.*$"
-			;;
-	esac
-}
-
 function run_hook {
 	# Run hooks before & after generating the page
 	# Hooks can use all variables defined inside wswsh
@@ -76,15 +62,12 @@ function gen_page {
 		fi
 	fi
 
-	# Define the regexes
-	define_regex
-
 	cd "$WSH_BASEDIR"
 	find src -type f -iname "*.${WSH_EXT:-txt}" | while IFS= read -r WSH_GENFILE; do
 		WSH_GENFILE_NOSRC="${WSH_GENFILE#*/}"
 		WSH_GENFILE_FINAL="dest/${WSH_GENFILE_NOSRC%%.*}.html"
 		# WSH_GENFILE_TITLE can be used in layout
-		WSH_GENFILE_TITLE="$(awk '/'"$WSH_PATTERN"'/{gsub(/'"$WSH_REGEX"'/,"");print $0;exit}' "$WSH_GENFILE")"
+		WSH_GENFILE_TITLE="$(awk '/'"${WSH_PATTERN:-<h1>}"'/{gsub(/'"${WSH_REGEX:-^[\t ]*<h1>[\t ]*|[\t ]*<\/h1>.*$}"'/,"");print $0;exit}' "$WSH_GENFILE")"
 
 		run_hook pre_genpage
 		page_header >"$WSH_GENFILE_FINAL"

@@ -21,6 +21,13 @@
 # You can leave this option if you only concatenate files with cat(1).
 #WSH_INTERP=""
 
+# Tag to match to extract page title, it defaults to <h1>
+#WSH_PATTERN=""
+
+# Regex to clear the HTML tags
+# Read the source code to see the default regex
+#WSH_REGEX=""
+
 # Enable source file copy.
 # The file in src/ used for the converting, will be copied to dest/
 # Valid value: 1. Disable it by commenting out the line.
