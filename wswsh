@@ -132,6 +132,6 @@ for f in robots.txt sitemap.xml; do
 done
 
 WSH_TOT="$(find "${WSH_BASEDIR}/dest" -type f | wc -l)"
-print "Generated $WSH_TOT file(s) in ${WSH_BASEDIR}/dest"
+print "$WSH_TOT file(s) in ${WSH_BASEDIR}/dest"
 
 exit
