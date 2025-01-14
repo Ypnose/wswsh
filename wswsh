@@ -125,6 +125,12 @@ get_recdirs
 gen_page
 copy_html
 
+for f in robots.txt sitemap.xml; do
+	if [[ -r ${WSH_BASEDIR}/src/${f} ]]; then
+		cp -a "${WSH_BASEDIR}/src/${f}" "${WSH_BASEDIR}/dest/${f}"
+	fi
+done
+
 WSH_TOT="$(find "${WSH_BASEDIR}/dest" -type f | wc -l)"
 print "Generated $WSH_TOT file(s) in ${WSH_BASEDIR}/dest"
 
