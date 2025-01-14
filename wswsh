@@ -66,10 +66,14 @@ function gen_page {
 		p_err "$WSH_INTERP not found in PATH"
 	fi
 
-	if [[ -n $WSH_CSSFILE && -r ${WSH_BASEDIR}/src/${WSH_CSSFILE} ]]; then
-		# WSH_CSS variable can be used in layout to trigger actions
-		WSH_CSS="1"
-		cp -a "${WSH_BASEDIR}/src/${WSH_CSSFILE}" "${WSH_BASEDIR}/dest/${WSH_CSSFILE}"
+	if [[ -n $WSH_CSSFILE ]]; then
+		if [[ -r ${WSH_BASEDIR}/src/${WSH_CSSFILE} ]]; then
+			# WSH_CSS variable can be used in layout to trigger actions
+			WSH_CSS="1"
+			cp -a "${WSH_BASEDIR}/src/${WSH_CSSFILE}" "${WSH_BASEDIR}/dest/${WSH_CSSFILE}"
+		else
+			p_err "${WSH_BASEDIR}/src/${WSH_CSSFILE} is missing"
+		fi
 	fi
 
 	# Define the regexes
